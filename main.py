@@ -19,6 +19,8 @@ cur = con.cursor()  #cur -> cursor
 
 root = Tk()
 root.title("Librarian")
+photo = PhotoImage(file ='img/logo.png')
+root.iconphoto(False, photo)
 root.minsize(width=400, height=400)
 root.geometry("600x500")
 
@@ -29,7 +31,7 @@ same = True
 n = 0.25
 
 # Adding a background image
-background_image = Image.open("librarian.jpg")
+background_image = Image.open("img/librarian.jpg")
 [imageSizeWidth, imageSizeHeight] = background_image.size
 img = ImageTk.PhotoImage(background_image)
 
