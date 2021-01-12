@@ -2,15 +2,16 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 import pymysql
+from os import getenv
+from dotenv import load_dotenv
 
-mypass = "root"
-mydatabase = "db"
+load_dotenv()
 
 con = pymysql.connect(host="localhost",
-                      user="root",
-                      password=mypass,
-                      database=mydatabase)
-cur = con.cursor()
+                      user=getenv('USER'),
+                      password=getenv('DB_PASS'),
+                      database=getenv('DB_NAME'))
+cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
 issueTable = "books_issued"
@@ -52,7 +53,7 @@ def returnn():
     # SQL Query
     issueSql = "DELETE FROM " + issueTable + " WHERE bid = '" + bid + "'"
     updateStatus = "UPDATE " + bookTable + " SET status = 'avail' WHERE book_id = '" + bid + "'"
-    
+
     try:
         if bid in allBid and status == True:
             cur.execute(issueSql)
@@ -90,13 +91,13 @@ def returnBook():
     Canvas1.pack(expand=True, fill=BOTH)
 
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
-    headingFrame1.place(relx=0.25, rely=0.1, relwidth=0.5, relheight=0.13)
+    headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
     headingLabel = Label(headingFrame1,
                          text="Return Book",
                          bg='black',
                          fg='white',
-                         font=('Courier', 15))
+                         font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     labelFrame = Frame(root, bg='black')
@@ -123,5 +124,5 @@ def returnBook():
                      fg='black',
                      command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
-
+    root.resizable(0, 0)
     root.mainloop()
