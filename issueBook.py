@@ -1,17 +1,18 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
+from os import getenv
 import pymysql
+from dotenv import load_dotenv
 
+load_dotenv()
 
-mypass = "root"
-mydatabase = "db"
 
 con = pymysql.connect(host="localhost",
-                      user="root",
-                      password=mypass,
-                      database=mydatabase)
-cur = con.cursor()
+                      user=getenv('USER'),
+                      password=getenv('DB_PASS'),
+                      database=getenv('DB_NAME'))
+cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
 bookTable = "books"
@@ -100,13 +101,13 @@ def issueBook():
     Canvas1.pack(expand=True, fill=BOTH)
 
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
-    headingFrame1.place(relx=0.25, rely=0.1, relwidth=0.5, relheight=0.13)
+    headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
     headingLabel = Label(headingFrame1,
                          text="Issue Book",
                          bg='black',
                          fg='white',
-                         font=('Courier', 15))
+                         font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     labelFrame = Frame(root, bg='black')
@@ -149,5 +150,5 @@ def issueBook():
                      fg='black',
                      command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
-
+    root.resizable(0, 0)
     root.mainloop()
