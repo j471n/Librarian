@@ -2,6 +2,10 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 import pymysql
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 # Adding book to Database
@@ -21,12 +25,12 @@ def bookRegister():
         messagebox.showinfo('Success', "Book added successfully")
     except:
         messagebox.showinfo("Error", "Can't add data into Database")
-
-    print(book_id)
-    print(title)
-    print(author)
-    print(publication)
-    print(status)
+        print(messagebox.ERROR)
+    print("Book ID : ",book_id)
+    print("Book Title : ", title)
+    print("Book Author : ",author)
+    print("Publication : ", publication)
+    print("Status : ", status)
     root.destroy()
 
 
@@ -39,11 +43,9 @@ def addBook():
     root.minsize(width=400, height=400)
     root.geometry("600x500")
 
-    mypass = "root"
-    mydatabase = "db"
+    con = pymysql.connect(host="localhost", user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+    cur = con.cursor()  #cur -> cursor
 
-    con = pymysql.connect(host="localhost", user="root", password=mypass, database=mydatabase)
-    cur = con.cursor()
 
     # Enter Table Names here
     bookTable = "books"  # Book Table
@@ -54,10 +56,14 @@ def addBook():
 
     # A container
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
-    headingFrame1.place(relx=0.25, rely=0.1, relwidth=0.5, relheight=0.13)
+    headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
     # Container Label
-    headingLabel = Label(headingFrame1, text="Add Book",bg='black', fg='white', font=('Courier', 15))
+    headingLabel = Label(headingFrame1,
+                         text="Add Book",
+                         bg='black',
+                         fg='white',
+                         font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     # Label Frame
@@ -106,5 +112,5 @@ def addBook():
     # Cancel Button
     cancelBtn = Button(root, text="Cancel", bg='#f7f1e3', fg='black', command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
-
+    root.resizable(0, 0)
     root.mainloop()
