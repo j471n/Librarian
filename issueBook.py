@@ -3,6 +3,7 @@ from PIL import ImageTk, Image
 from tkinter import messagebox
 from os import getenv
 import pymysql
+from datetime import date
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,7 +29,7 @@ def issue():
 
     bid = inf1.get()
     issueto = inf2.get()
-    issueDate = inf3.get()
+    issueDate = date.today().strftime("%b %d, %Y")
 
     extractBid = "SELECT book_id FROM " + bookTable
     try:
@@ -81,9 +82,7 @@ def issue():
     except:
         messagebox.showinfo("Search Error", "The value entered is wrong, Try again.")
     allBid.clear()
-    # print(bid)
-    # print(issueto)
-    # print(issueDate)
+
 
 
 
@@ -126,14 +125,6 @@ def issueBook():
 
     inf2 = Entry(labelFrame)
     inf2.place(relx=0.3, rely=0.4, relwidth=0.62)
-
-
-    # Issued Date
-    lb3 = Label(labelFrame, text="Issued Date : ", bg='black', fg='white')
-    lb3.place(relx=0.05, rely=0.6)
-
-    inf3 = Entry(labelFrame)
-    inf3.place(relx=0.3, rely=0.6, relwidth=0.62)
 
     #Issue Button
     issueBtn = Button(root,
