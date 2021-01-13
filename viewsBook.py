@@ -50,11 +50,11 @@ bookTable = "books"
 
 def GetBooks(labelFrame, i , y):
 
-    Label(labelFrame, fg='black', bg='white', width=10, pady=2, text=i[0]).grid(row=y, column=0)
-    Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[1]).grid(row=y, column=1)
-    Label(labelFrame, fg='black', bg='white', width=20, pady=2, text=i[2]).grid(row=y, column=2)
-    Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[3]).grid(row=y, column=3)
-    Label(labelFrame, fg='black', bg='white', width=12, pady=2, text=i[4]).grid(row=y, column=4)
+    Label(labelFrame, fg='black', bg='white', width=10, pady=2, text=i[0], font=('Gill Sans MT', 10)).grid(row=y, column=0)
+    Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[1], font=('Gill Sans MT', 10)).grid(row=y, column=1)
+    Label(labelFrame, fg='black', bg='white', width=20, pady=2, text=i[2], font=('Gill Sans MT', 10)).grid(row=y, column=2)
+    Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[3], font=('Gill Sans MT', 10)).grid(row=y, column=3)
+    Label(labelFrame, fg='black', bg='white', width=12, pady=2, text=i[4], font=('Gill Sans MT', 10)).grid(row=y, column=4)
 
 def View():
 
@@ -82,11 +82,11 @@ def View():
     labelFrame = Frame(root, bg='black')
     labelFrame.place(relx=0, rely=0.25, relwidth=1, relheight=0.6)
 
-    Label(labelFrame, bg='black', fg='white',width=10, pady=5, text="BID").grid(row=0, column=0)
-    Label(labelFrame, fg='black', bg='white',width=20, pady=5, text="Title").grid(row=0, column=1)
-    Label(labelFrame, bg='black', fg='white',width=20, pady=5, text="Author").grid(row=0, column=2)
-    Label(labelFrame, fg='black', bg='white',width=20, pady=5, text="Publication").grid(row=0, column=3)
-    Label(labelFrame, bg='black', fg='white',width=12, pady=5, text="Status").grid(row=0, column=4)
+    Label(labelFrame, bg='black', fg='white',width=10, pady=5, font=('Gill Sans MT', 10), text="BID").grid(row=0, column=0)
+    Label(labelFrame, fg='black', bg='white',width=20, pady=5, font=('Gill Sans MT', 10), text="Title").grid(row=0, column=1)
+    Label(labelFrame, bg='black', fg='white',width=20, pady=5, font=('Gill Sans MT', 10), text="Author").grid(row=0, column=2)
+    Label(labelFrame, fg='black', bg='white',width=20, pady=5, font=('Gill Sans MT', 10), text="Publication").grid(row=0, column=3)
+    Label(labelFrame, bg='black', fg='white',width=12, pady=5, font=('Gill Sans MT', 10), text="Status").grid(row=0, column=4)
 
 
     getBooks = "SELECT * FROM " + bookTable + ";"
@@ -103,7 +103,7 @@ def View():
         messagebox.showinfo("Failed to fetch files from database")
 
     # Quit Button
-    quitBtn = Button(root, text="Quit", bg='#f7f1e3', fg='black', command=root.destroy)
+    quitBtn = Button(root, text="Quit", bg='#f7f1e3', fg='black', font=('Gill Sans MT', 12), command=root.destroy)
     quitBtn.place(relx=0.4, rely=0.9, relwidth=0.18, relheight=0.08)
     root.resizable(0, 0)
     root.mainloop()

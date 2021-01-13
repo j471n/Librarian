@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.font import Font
 from PIL import ImageTk, Image
 from tkinter import messagebox
 from os import getenv
@@ -113,14 +114,22 @@ def issueBook():
     labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.5)
 
     # Book ID
-    lb1 = Label(labelFrame, text="Book ID : ", bg='black', fg='white')
+    lb1 = Label(labelFrame,
+                text="Book ID : ",
+                bg='black',
+                fg='white',
+                font=('Gill Sans MT', 14))
     lb1.place(relx=0.05, rely=0.2)
 
     inf1 = Entry(labelFrame)
     inf1.place(relx=0.3, rely=0.2, relwidth=0.62)
 
     # Issued To Student name
-    lb2 = Label(labelFrame, text="Issued To : ", bg='black', fg='white')
+    lb2 = Label(labelFrame,
+                text="Issued To : ",
+                bg='black',
+                fg='white',
+                font=('Gill Sans MT', 14))
     lb2.place(relx=0.05, rely=0.4)
 
     inf2 = Entry(labelFrame)
@@ -131,15 +140,17 @@ def issueBook():
                       text="Issue",
                       bg='#d1ccc0',
                       fg='black',
+                      font=('Gill Sans MT', 12),
                       command=issue)
     issueBtn.place(relx=0.28, rely=0.9, relwidth=0.18, relheight=0.08)
 
     # Cancel Button
     cancelBtn = Button(root,
-                     text="Cancel",
-                     bg='#aaa69d',
-                     fg='black',
-                     command=root.destroy)
+                       text="Cancel",
+                       bg='#aaa69d',
+                       fg='black',
+                       font=('Gill Sans MT', 12),
+                       command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
     root.resizable(0, 0)
     root.mainloop()

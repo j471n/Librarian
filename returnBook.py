@@ -104,7 +104,11 @@ def returnBook():
     labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.5)
 
     # Book ID to Delete
-    lb1 = Label(labelFrame, text="Book ID : ", bg='black', fg='white')
+    lb1 = Label(labelFrame,
+                text="Book ID : ",
+                bg='black',
+                fg='white',
+                font=('Gill Sans MT', 14))
     lb1.place(relx=0.05, rely=0.5)
 
     bookInfo1 = Entry(labelFrame)
@@ -115,6 +119,7 @@ def returnBook():
                        text="Return",
                        bg='#d1ccc0',
                        fg='black',
+                       font=('Gill Sans MT', 12),
                        command=returnn)
     SubmitBtn.place(relx=0.28, rely=0.9, relwidth=0.18, relheight=0.08)
 
@@ -122,6 +127,7 @@ def returnBook():
                      text="Cancel",
                      bg='#f7f1e3',
                      fg='black',
+                     font=('Gill Sans MT', 12),
                      command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
     root.resizable(0, 0)
