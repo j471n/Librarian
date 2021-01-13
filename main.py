@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-con = pymysql.connect(host="localhost", user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
-cur = con.cursor()  #cur -> cursor
+# Function form viewsBook.py to connect DB
+connectDB()
 
 
 root = Tk()
