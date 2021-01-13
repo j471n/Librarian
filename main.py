@@ -27,7 +27,7 @@ root.geometry("600x500")
 # n = 0.25
 
 # Adding a background image
-background_image = Image.open("img/librarian.jpg")
+background_image = Image.open("img/background/librarian.jpg")
 [imageSizeWidth, imageSizeHeight] = background_image.size
 img = ImageTk.PhotoImage(background_image)
 
