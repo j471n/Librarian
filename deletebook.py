@@ -58,9 +58,10 @@ def delete():
     global bookInfo1, bookInfo2, Canvas1, con, cur, root
 
     root = Tk()
-    root.title("Library")
+    root.title("Delete Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
+    root.iconbitmap('img/logo.ico')
 
     Canvas1 = Canvas(root)
     Canvas1.config(bg="#006B38")

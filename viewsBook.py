@@ -59,9 +59,10 @@ def GetBooks(labelFrame, i , y):
 def View():
 
     root = Tk()
-    root.title("Library")
+    root.title("View Details")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
+    root.iconbitmap('img/logo.ico')
 
     # Canvas1 Properties
     Canvas1 = Canvas(root)

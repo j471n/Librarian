@@ -81,9 +81,10 @@ def returnBook():
     global bookInfo1, SubmitBtn, cancelBtn, Canvas1, con, cur, root, labelFrame, lb1
 
     root = Tk()
-    root.title("Library")
+    root.title("Return Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
+    root.iconbitmap('img/logo.ico')
 
     Canvas1 = Canvas(root)
 

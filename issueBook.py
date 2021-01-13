@@ -99,9 +99,10 @@ def issueBook():
     global issueBtn, labelFrame, lb1, inf1, inf2,inf3, cancelBtn, root, Canvas1, status
 
     root = Tk()
-    root.title("Library")
+    root.title("Issue Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
+    root.iconbitmap('img/logo.ico')
 
     Canvas1 = Canvas(root)
     Canvas1.config(bg="#D6ED17")

@@ -39,9 +39,10 @@ def addBook():
     global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, Canvas1, con, cur, bookTable, root
 
     root = Tk()
-    root.title("Library")
+    root.title("Add Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
+    root.iconbitmap('img/logo.ico')
 
     con = pymysql.connect(host="localhost", user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
     cur = con.cursor()  #cur -> cursor
