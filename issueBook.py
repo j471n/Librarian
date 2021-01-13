@@ -59,6 +59,7 @@ def issue():
     issueSql = "INSERT INTO " + issueTable + " VALUES ('" + bid + "','" + issueto + "','" + issueDate + "')"
     updateStatus = "UPDATE " + bookTable + " SET status = 'issued' WHERE book_id = '" + bid + "'"
     issueDateAndName = "SELECT issued_date, issuedto FROM " + issueTable + " WHERE bid = '" + bid + "'"
+    getBookName = "SELECT title FROM " + bookTable + " WHERE book_id = " + bid + ";"
 
     try:
         if bid in allBid and status == True:
@@ -66,8 +67,14 @@ def issue():
             con.commit()
             cur.execute(updateStatus)
             con.commit()
+            cur.execute(getBookName)
+            con.commit()
+
+            bName = ""
+            for i in cur:
+                bName = i[0].capitalize()
             root.destroy()
-            messagebox.showinfo('Success', "Book Issued Successfully on " + str(issueDate) + " to " + str(issueto).capitalize())
+            messagebox.showinfo('Success', f"Book Name - {bName}\nSuccessfully Issued on " + str(issueDate) + " to " + str(issueto).capitalize())
         else:
             allBid.clear()
             cur.execute(issueDateAndName)
