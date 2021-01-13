@@ -2,17 +2,16 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 import pymysql
+from os import getenv
+from dotenv import load_dotenv
 
-# Database Name and Password
-mypass = "root"
-mydatabase = "db"
+load_dotenv()
 
-# Connecting the MySql server
 con = pymysql.connect(host="localhost",
-                      user="root",
-                      password=mypass,
-                      database=mydatabase)
-cur = con.cursor()
+                      user=getenv('USER'),
+                      password=getenv('DB_PASS'),
+                      database=getenv('DB_NAME'))
+cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
 bookTable = "books"
@@ -59,45 +58,56 @@ def delete():
     global bookInfo1, bookInfo2, Canvas1, con, cur, root
 
     root = Tk()
-    root.title("Library")
+    root.title("Delete Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
+    root.iconbitmap('img/logo.ico')
 
     Canvas1 = Canvas(root)
     Canvas1.config(bg="#006B38")
     Canvas1.pack(expand=True, fill=BOTH)
 
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
-    headingFrame1.place(relx=0.25, rely=0.1, relwidth=0.5, relheight=0.13)
+    headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
     headingLabel = Label(headingFrame1,
                          text="Delete Book",
                          bg='black',
                          fg='white',
-                         font=('Courier', 15))
+                         font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     labelFrame = Frame(root, bg='black')
     labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.5)
 
     # Book ID to Delete
-    lb2 = Label(labelFrame, text="Book ID : ", bg='black', fg='white')
-    lb2.place(relx=0.05, rely=0.5)
+    lb1 = Label(labelFrame,
+                text="Book ID : ",
+                bg='black',
+                fg='white',
+                font=('Gill Sans MT', 14))
+    lb1.place(relx=0.05, rely=0.3)
 
     bookInfo1 = Entry(labelFrame)
-    bookInfo1.place(relx=0.3, rely=0.5, relwidth=0.62)
+    bookInfo1.place(relx=0.3, rely=0.325, relwidth=0.52)
 
-    lb3 = Label(labelFrame, text="Reason : ", bg='black', fg='white')
-    lb3.place(relx=0.05, rely=0.65)
+    lb2 = Label(labelFrame,
+                text="Reason : ",
+                bg='black',
+                fg='white',
+                font=('Gill Sans MT', 14))
+    lb2.place(relx=0.05, rely=0.6)
 
     bookInfo2 = Entry(labelFrame)
-    bookInfo2.place(relx=0.3, rely=0.65, relwidth=0.62)
+    bookInfo2.place(relx=0.3, rely=0.625, relwidth=0.52)
+    print("Reason : ", bookInfo2)
 
     #Submit Button
     SubmitBtn = Button(root,
-                       text="SUBMIT",
+                       text="Submit",
                        bg='#d1ccc0',
                        fg='black',
+                       font=('Gill Sans MT', 12),
                        command=deleteBook)
     SubmitBtn.place(relx=0.28, rely=0.9, relwidth=0.18, relheight=0.08)
 
@@ -105,7 +115,8 @@ def delete():
                      text="Cancel",
                      bg='#f7f1e3',
                      fg='black',
+                     font=('Gill Sans MT', 12),
                      command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
-
+    root.resizable(0, 0)
     root.mainloop()
