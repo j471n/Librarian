@@ -56,7 +56,7 @@ btn1.place(relx=0.28,rely=0.35, relwidth=0.45,relheight=0.1)
 btn2 = Button(root,text="Delete Book",bg='black', fg='white', image=img2, compound=LEFT, padx=25, font=('Gill Sans MT', 12),anchor=CENTER, command=delete)
 btn2.place(relx=0.28,rely=0.45, relwidth=0.45,relheight=0.1)
 
-btn3 = Button(root,text="View Details",bg='black', fg='white', image=img3, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER,command=Show)
+btn3 = Button(root,text="View Details",bg='black', fg='white', image=img3, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER,command=View)
 btn3.place(relx=0.28,rely=0.55, relwidth=0.45,relheight=0.1)
 
 btn4 = Button(root,text="Issue Book",bg='black', fg='white', image=img4, compound=LEFT, padx=40, font=('Gill Sans MT', 12), anchor=CENTER,command=issueBook)
