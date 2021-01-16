@@ -98,16 +98,18 @@ def issueBook():
 
     global issueBtn, labelFrame, lb1, inf1, inf2,inf3, cancelBtn, root, Canvas1, status
 
-    root = Tk()
+    root = Toplevel()
     root.title("Issue Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
     root.iconbitmap('img/logo.ico')
 
-    Canvas1 = Canvas(root)
-    Canvas1.config(bg="#D6ED17")
-    Canvas1.pack(expand=True, fill=BOTH)
-
+    #Adding Image to Add Book
+    global img
+    bg = Image.open("img/background/issueBook.jpg")
+    bg = bg.resize((600, 500), Image.ANTIALIAS)
+    img = ImageTk.PhotoImage(bg)
+    Label(root, image=img).pack()
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
     headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
@@ -119,7 +121,7 @@ def issueBook():
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     labelFrame = Frame(root, bg='black')
-    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.5)
+    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.4)
 
     # Book ID
     lb1 = Label(labelFrame,
@@ -127,10 +129,10 @@ def issueBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 14))
-    lb1.place(relx=0.05, rely=0.2)
+    lb1.place(relx=0.1, rely=0.25)
 
     inf1 = Entry(labelFrame)
-    inf1.place(relx=0.3, rely=0.2, relwidth=0.62)
+    inf1.place(relx=0.4, rely=0.3, relwidth=0.5)
 
     # Issued To Student name
     lb2 = Label(labelFrame,
@@ -138,10 +140,10 @@ def issueBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 14))
-    lb2.place(relx=0.05, rely=0.4)
+    lb2.place(relx=0.1, rely=0.51)
 
     inf2 = Entry(labelFrame)
-    inf2.place(relx=0.3, rely=0.4, relwidth=0.62)
+    inf2.place(relx=0.4, rely=0.55, relwidth=0.5)
 
     #Issue Button
     issueBtn = Button(root,
