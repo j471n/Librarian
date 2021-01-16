@@ -8,6 +8,7 @@ from issueBook import *
 from returnBook import *
 from os import getenv
 from dotenv import load_dotenv
+from feedback import feedBack
 
 load_dotenv()
 # Function form viewsBook.py to connect DB
@@ -44,7 +45,7 @@ img2 = PhotoImage(file="img/buttons/del-32.png")
 img3 = PhotoImage(file="img/buttons/info-32.png")
 img4 = PhotoImage(file="img/buttons/issue2-32.png")
 img5 = PhotoImage(file="img/buttons/return-32.png")
-# addB = img1.subsample(3, 3)
+img6 = PhotoImage(file="img/buttons/f-icon.png")
 
 # Resizing image to fit on button
 
@@ -62,5 +63,9 @@ btn4.place(relx=0.28,rely=0.65, relwidth=0.45,relheight=0.1)
 
 btn5 = Button(root,text="Return Book",bg='black', fg='white', image=img5, compound=LEFT, padx=25, font=('Gill Sans MT', 12),anchor=CENTER, command=returnBook)
 btn5.place(relx=0.28,rely=0.75, relwidth=0.45,relheight=0.1)
+
+btn6 = Button(root, text="", bg='black', fg='white', image=img6, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER, command=feedBack)
+btn6.place(relx=0.03, rely=0.87, relwidth=0.1, relheight=0.1)
+
 root.resizable(0,0)
 root.mainloop()
