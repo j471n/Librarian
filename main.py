@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 # Function form viewsBook.py to connect DB
-connectDB()
 
 
 root = Tk()
