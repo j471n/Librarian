@@ -83,20 +83,29 @@ def View():
                          font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+
+
     # TREEVIEW in View Window
     detail_tree = ttk.Treeview(root)
-    detail_tree['columns'] = ("ID", "Title", "Author", "Publication", "Status")
+    detail_tree.pack()
+
+    # ScrollBar Adding to Treeview
+    tree_scroll = Scrollbar(root, orient="vertical", command=detail_tree.yview)
+    tree_scroll.place(relx=0.978, rely=0.3, relheight=0.54, relwidth=0.020)
+    detail_tree.configure(yscrollcommand=tree_scroll.set)
+
+    detail_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status")
 
     #Heading List
     detail_tree.heading("#0", text="")
-    detail_tree.heading("ID", text="ID", anchor=CENTER)
+    detail_tree.heading("BID", text="BID", anchor=CENTER)
     detail_tree.heading("Title", text="Title", anchor=CENTER)
     detail_tree.heading("Author", text="Author", anchor=CENTER)
     detail_tree.heading("Publication", text="Publication", anchor=CENTER)
     detail_tree.heading("Status", text="Status", anchor=CENTER)
     # Colums List
     detail_tree.column('#0', width=0, stretch=NO)
-    detail_tree.column('ID', width=10, anchor=CENTER)
+    detail_tree.column('BID', width=10, anchor=CENTER)
     detail_tree.column('Title', width=20, anchor=CENTER)
     detail_tree.column('Author', width=10, anchor=CENTER)
     detail_tree.column('Publication', width=20, anchor=CENTER)
@@ -123,10 +132,10 @@ def View():
         for data in cur:
             print(data)
             detail_tree.insert(parent='', index=END, iid=count, text="",
-                    values=(data[0], 
-                    data[1].capitalize(), 
+                    values=(data[0],
+                    data[1].capitalize(),
                     data[2].capitalize(),
-                    data[3].capitalize(), 
+                    data[3].capitalize(),
                     data[4].capitalize())
             )
             count += 1
