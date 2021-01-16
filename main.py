@@ -23,9 +23,11 @@ root.geometry("600x500")
 
 
 # Adding a background image
-img = ImageTk.PhotoImage(Image.open("img/background/librarian.jpg"))
-Label(root, image=img).pack()
 
+bg = Image.open("img/background/librarian.jpg")
+bg = bg.resize((600, 500), Image.ANTIALIAS)
+img = ImageTk.PhotoImage(bg)
+Label(root, image=img).pack()
 
 
 headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
