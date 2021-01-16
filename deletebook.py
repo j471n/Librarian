@@ -57,15 +57,18 @@ def delete():
 
     global bookInfo1, bookInfo2, Canvas1, con, cur, root
 
-    root = Tk()
+    root = Toplevel()
     root.title("Delete Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
     root.iconbitmap('img/logo.ico')
 
-    Canvas1 = Canvas(root)
-    Canvas1.config(bg="#006B38")
-    Canvas1.pack(expand=True, fill=BOTH)
+    #Adding Image to Add Book
+    global img
+    bg = Image.open("img/background/deleteBook.jpg")
+    bg = bg.resize((800, 750), Image.ANTIALIAS)
+    img = ImageTk.PhotoImage(bg)
+    Label(root, image=img).pack()
 
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
     headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
