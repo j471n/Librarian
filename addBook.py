@@ -38,7 +38,7 @@ def addBook():
 
     global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, Canvas1, con, cur, bookTable, root
 
-    root = Tk()
+    root = Toplevel()
     root.title("Add Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
@@ -47,13 +47,14 @@ def addBook():
     con = pymysql.connect(host="localhost", user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
     cur = con.cursor()  #cur -> cursor
 
+    #Adding Image to Add Book
+    global img
+    bg = Image.open("img/background/addBook.jpg")
+    bg = bg.resize((600, 500), Image.ANTIALIAS) 
+    img = ImageTk.PhotoImage(bg)
+    Label(root, image=img).pack()
 
-    # Enter Table Names here
     bookTable = "books"  # Book Table
-
-    Canvas1 = Canvas(root)
-    Canvas1.config(bg="#ff6e40")
-    Canvas1.pack(expand=True, fill=BOTH)
 
     # A container
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
@@ -116,7 +117,7 @@ def addBook():
     bookInfo4.place(relx=0.35, rely=0.65, relwidth=0.52, relheight=0.08)
 
     # Book Status
-    
+
     lb5 = Label(labelFrame,
                 text="Status(Avail/issued) : ",
                 bg='black',
