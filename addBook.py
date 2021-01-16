@@ -2,8 +2,10 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 import pymysql
-from os import getenv
+from os import getenv, stat
 from dotenv import load_dotenv
+
+import sys
 
 load_dotenv()
 
@@ -15,8 +17,12 @@ def bookRegister():
     title = bookInfo2.get()
     author = bookInfo3.get()
     publication = bookInfo4.get()
-    status = bookInfo5.get()
-    status = status.lower()
+    status = bookInfo5.get().lower()
+
+    if status not in ["avail", "issued"] or book_id == "" or author == "" or title == "":
+        root.destroy()
+        messagebox.showerror("Failed", "All Fields are Required.")
+        return  
 
     insertBooks = "INSERT INTO " + bookTable + " VALUES ('" + book_id + "','" + title + "','" + author + "','" + publication + "','" + status + "')"
     try:
@@ -26,17 +32,17 @@ def bookRegister():
     except:
         messagebox.showinfo("Error", "Can't add data into Database")
         print(messagebox.ERROR)
+
     print("Book ID : ",book_id)
     print("Book Title : ", title)
     print("Book Author : ",author)
     print("Publication : ", publication)
     print("Status : ", status)
-    root.destroy()
 
 
 def addBook():
 
-    global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, Canvas1, con, cur, bookTable, root
+    global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, con, cur, bookTable, root
 
     root = Toplevel()
     root.title("Add Book")
@@ -50,7 +56,7 @@ def addBook():
     #Adding Image to Add Book
     global img
     bg = Image.open("img/background/addBook.jpg")
-    bg = bg.resize((600, 500), Image.ANTIALIAS) 
+    bg = bg.resize((600, 500), Image.ANTIALIAS)
     img = ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
 
@@ -70,7 +76,7 @@ def addBook():
 
     # Label Frame
     labelFrame = Frame(root, bg='black')
-    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.4)
+    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.45)
 
     # Book ID
     lb1 = Label(labelFrame,
@@ -78,7 +84,7 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb1.place(relx=0.05, rely=0.2, relheight=0.08)
+    lb1.place(relx=0.1, rely=0.2, relheight=0.08)
 
     bookInfo1 = Entry(labelFrame)
     bookInfo1.place(relx=0.35, rely=0.2, relwidth=0.52, relheight=0.08)
@@ -89,7 +95,7 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb2.place(relx=0.05, rely=0.35, relheight=0.08)
+    lb2.place(relx=0.1, rely=0.35, relheight=0.08)
 
     bookInfo2 = Entry(labelFrame)
     bookInfo2.place(relx=0.35, rely=0.35, relwidth=0.52, relheight=0.08)
@@ -100,7 +106,7 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb3.place(relx=0.05, rely=0.50, relheight=0.08)
+    lb3.place(relx=0.1, rely=0.50, relheight=0.08)
 
     bookInfo3 = Entry(labelFrame)
     bookInfo3.place(relx=0.35, rely=0.50, relwidth=0.52, relheight=0.08)
@@ -111,7 +117,7 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb4.place(relx=0.05, rely=0.65, relheight=0.08)
+    lb4.place(relx=0.1, rely=0.65, relheight=0.08)
 
     bookInfo4 = Entry(labelFrame)
     bookInfo4.place(relx=0.35, rely=0.65, relwidth=0.52, relheight=0.08)
@@ -119,11 +125,11 @@ def addBook():
     # Book Status
 
     lb5 = Label(labelFrame,
-                text="Status(Avail/issued) : ",
+                text="Avail / Issued : ",
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb5.place(relx=0.05, rely=0.80, relheight=0.08)
+    lb5.place(relx=0.1, rely=0.80, relheight=0.08)
 
     bookInfo5 = Entry(labelFrame)
     bookInfo5.place(relx=0.35, rely=0.80, relwidth=0.52, relheight=0.08)
