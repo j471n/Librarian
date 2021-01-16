@@ -80,16 +80,18 @@ def returnBook():
 
     global bookInfo1, SubmitBtn, cancelBtn, Canvas1, con, cur, root, labelFrame, lb1
 
-    root = Tk()
+    root = Toplevel()
     root.title("Return Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
     root.iconbitmap('img/logo.ico')
 
-    Canvas1 = Canvas(root)
-
-    Canvas1.config(bg="#006B38")
-    Canvas1.pack(expand=True, fill=BOTH)
+    #Adding Image to Add Book
+    global img
+    bg = Image.open("img/background/returnBook.jpg")
+    bg = bg.resize((600, 500), Image.ANTIALIAS)
+    img = ImageTk.PhotoImage(bg)
+    Label(root, image=img).pack()
 
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
     headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
@@ -102,7 +104,7 @@ def returnBook():
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     labelFrame = Frame(root, bg='black')
-    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.5)
+    labelFrame.place(relx=0.1, rely=0.4, relwidth=0.8, relheight=0.4)
 
     # Book ID to Delete
     lb1 = Label(labelFrame,
@@ -110,10 +112,10 @@ def returnBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 14))
-    lb1.place(relx=0.05, rely=0.5)
+    lb1.place(relx=0.1, rely=0.364)
 
     bookInfo1 = Entry(labelFrame)
-    bookInfo1.place(relx=0.3, rely=0.5, relwidth=0.62)
+    bookInfo1.place(relx=0.4, rely=0.4, relwidth=0.5)
 
     #Submit Button
     SubmitBtn = Button(root,
