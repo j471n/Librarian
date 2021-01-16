@@ -4,6 +4,7 @@ from tkinter import messagebox
 import pymysql
 from os import getenv
 from dotenv import load_dotenv
+from tkinter import ttk
 
 load_dotenv()
 
@@ -48,26 +49,28 @@ bookTable = "books"
 
 
 
-def GetBooks(labelFrame, i , y):
+# def GetBooks(labelFrame, i , y):
 
-    Label(labelFrame, fg='black', bg='white', width=10, pady=2, text=i[0], font=('Gill Sans MT', 10)).grid(row=y, column=0)
-    Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[1], font=('Gill Sans MT', 10)).grid(row=y, column=1)
-    Label(labelFrame, fg='black', bg='white', width=20, pady=2, text=i[2], font=('Gill Sans MT', 10)).grid(row=y, column=2)
-    Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[3], font=('Gill Sans MT', 10)).grid(row=y, column=3)
-    Label(labelFrame, fg='black', bg='white', width=12, pady=2, text=i[4], font=('Gill Sans MT', 10)).grid(row=y, column=4)
+#     Label(labelFrame, fg='black', bg='white', width=10, pady=2, text=i[0], font=('Gill Sans MT', 10)).grid(row=y, column=0)
+#     Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[1], font=('Gill Sans MT', 10)).grid(row=y, column=1)
+#     Label(labelFrame, fg='black', bg='white', width=20, pady=2, text=i[2], font=('Gill Sans MT', 10)).grid(row=y, column=2)
+#     Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[3], font=('Gill Sans MT', 10)).grid(row=y, column=3)
+#     Label(labelFrame, fg='black', bg='white', width=12, pady=2, text=i[4], font=('Gill Sans MT', 10)).grid(row=y, column=4)
 
 def View():
 
-    root = Tk()
+    root = Toplevel()
     root.title("View Details")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
     root.iconbitmap('img/logo.ico')
 
-    # Canvas1 Properties
-    Canvas1 = Canvas(root)
-    Canvas1.config(bg="#12a4d9")
-    Canvas1.pack(expand=True, fill=BOTH)
+    #Adding Image to Add Book
+    global img
+    bg = Image.open("img/background/viewsBook.jpg")
+    bg = bg.resize((600, 500), Image.ANTIALIAS)
+    img = ImageTk.PhotoImage(bg)
+    Label(root, image=img).pack()
 
     # Heading Frame - Container
     headingFrame1 = Frame(root, bg="#FFBB00", bd=4)
@@ -80,28 +83,58 @@ def View():
                          font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-    labelFrame = Frame(root, bg='black')
-    labelFrame.place(relx=0, rely=0.25, relwidth=1, relheight=0.6)
+    # TREEVIEW in View Window
+    detail_tree = ttk.Treeview(root)
+    detail_tree['columns'] = ("ID", "Title", "Author", "Publication", "Status")
 
-    Label(labelFrame, bg='black', fg='white',width=10, pady=5, font=('Gill Sans MT', 10), text="BID").grid(row=0, column=0)
-    Label(labelFrame, fg='black', bg='white',width=20, pady=5, font=('Gill Sans MT', 10), text="Title").grid(row=0, column=1)
-    Label(labelFrame, bg='black', fg='white',width=20, pady=5, font=('Gill Sans MT', 10), text="Author").grid(row=0, column=2)
-    Label(labelFrame, fg='black', bg='white',width=20, pady=5, font=('Gill Sans MT', 10), text="Publication").grid(row=0, column=3)
-    Label(labelFrame, bg='black', fg='white',width=12, pady=5, font=('Gill Sans MT', 10), text="Status").grid(row=0, column=4)
+    #Heading List
+    detail_tree.heading("#0", text="")
+    detail_tree.heading("ID", text="ID", anchor=CENTER)
+    detail_tree.heading("Title", text="Title", anchor=CENTER)
+    detail_tree.heading("Author", text="Author", anchor=CENTER)
+    detail_tree.heading("Publication", text="Publication", anchor=CENTER)
+    detail_tree.heading("Status", text="Status", anchor=CENTER)
+    # Colums List
+    detail_tree.column('#0', width=0, stretch=NO)
+    detail_tree.column('ID', width=10, anchor=CENTER)
+    detail_tree.column('Title', width=20, anchor=CENTER)
+    detail_tree.column('Author', width=10, anchor=CENTER)
+    detail_tree.column('Publication', width=20, anchor=CENTER)
+    detail_tree.column('Status', width=10, anchor=CENTER)
 
+    # Styling Treeview
+    style = ttk.Style()
+    style.configure("Treeview",
+                    background='#d3d3d3',
+                    foreground="black",
+                    rowheight=30,
+                    font=('Arial', 9))
 
+    style.map("Treeview",
+              background=[('selected', 'green'), ('active', '#D3D3D3')])
+
+    #Fetching data from database
     getBooks = "SELECT * FROM " + bookTable + ";"
-    y = 2
+    count = 0
     try:
         cur.execute(getBooks)
-        s = con.commit()
-        print(s)
+        con.commit()
 
-        for i in cur:
-            GetBooks(labelFrame, i, y)
-            y += 1
+        for data in cur:
+            print(data)
+            detail_tree.insert(parent='', index=END, iid=count, text="",
+                    values=(data[0], 
+                    data[1].capitalize(), 
+                    data[2].capitalize(),
+                    data[3].capitalize(), 
+                    data[4].capitalize())
+            )
+            count += 1
+
+        detail_tree.place(relx=0, rely=0.25, relwidth=1, relheight=0.6)
     except:
         messagebox.showinfo("Failed to fetch files from database")
+
 
     # Quit Button
     quitBtn = Button(root, text="Quit", bg='#f7f1e3', fg='black', font=('Gill Sans MT', 12), command=root.destroy)
