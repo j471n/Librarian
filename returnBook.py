@@ -20,11 +20,16 @@ bookTable = "books"
 allBid = []  #To store all the Book ID’s
 
 
-def returnn():
+def returnn(event):
 
     global SubmitBtn, labelFrame, lb1, bookInfo1, quitBtn, root, Canvas1, status, check
 
     bid = bookInfo1.get()
+
+    if bid=="":
+        root.destroy()
+        messagebox.showerror("Failed", "All Fields are Required.")
+        return
 
     extractBid = "SELECT bid FROM " + issueTable
     try:
@@ -133,5 +138,7 @@ def returnBook():
                      font=('Gill Sans MT', 12),
                      command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
+
+    root.bind('<Return>', returnn)
     root.resizable(0, 0)
     root.mainloop()

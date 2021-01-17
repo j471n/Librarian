@@ -11,7 +11,7 @@ load_dotenv()
 
 
 # Adding book to Database
-def bookRegister():
+def bookRegister(event):
 
     book_id = bookInfo1.get()
     title = bookInfo2.get()
@@ -22,7 +22,7 @@ def bookRegister():
     if status not in ["avail", "issued"] or book_id == "" or author == "" or title == "":
         root.destroy()
         messagebox.showerror("Failed", "All Fields are Required.")
-        return  
+        return
 
     insertBooks = "INSERT INTO " + bookTable + " VALUES ('" + book_id + "','" + title + "','" + author + "','" + publication + "','" + status + "')"
     try:
@@ -151,5 +151,7 @@ def addBook():
                        command=root.destroy,
                        font=('Gill Sans MT', 12))
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
+
+    root.bind('<Return>', bookRegister)
     root.resizable(0, 0)
     root.mainloop()

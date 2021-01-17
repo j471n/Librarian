@@ -19,9 +19,15 @@ issueTable = "books_issued"
 
 
 
-def deleteBook():
+def deleteBook(event):
 
     bid = bookInfo1.get()
+    reason = bookInfo2.get()
+
+    if bid == "" or reason == "":
+        root.destroy()
+        messagebox.showerror("Failed", "All Fields are Required.")
+        return  
 
     deleteSql = "DELETE FROM " + bookTable + " WHERE book_id = '" + bid + "'"
     deleteIssue = "DELETE FROM " + issueTable + " WHERE bid = '" + bid + "'"
@@ -35,22 +41,15 @@ def deleteBook():
         cur.execute(book_name)
         con.commit()
 
-
-
         messagebox.showinfo('Success', "Book Record Deleted Successfully")
 
     except:
         messagebox.showinfo('Failed', "You've Entered the Wrong Book ID.")
 
     print(bid)
-    # print(s)
-
 
     bookInfo1.delete(0, END)
     root.destroy()
-
-
-
 
 
 def delete():
@@ -103,7 +102,7 @@ def delete():
 
     bookInfo2 = Entry(labelFrame)
     bookInfo2.place(relx=0.3, rely=0.625, relwidth=0.52)
-    print("Reason : ", bookInfo2)
+    # print("Reason : ", bookInfo2.get())
 
     #Submit Button
     SubmitBtn = Button(root,
@@ -121,5 +120,8 @@ def delete():
                      font=('Gill Sans MT', 12),
                      command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
+
+    # Running SendEmail on Enter
+    root.bind('<Return>', deleteBook)
     root.resizable(0, 0)
     root.mainloop()

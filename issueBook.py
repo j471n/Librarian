@@ -24,13 +24,18 @@ allBid = []  #To store all the Book ID’s
 
 
 
-def issue():
+def issue(event):
 
     global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date, issuedName
 
     bid = inf1.get()
     issueto = inf2.get()
     issueDate = date.today().strftime("%b %d, %Y")
+
+    if bid == "" or issueto == "":
+        root.destroy()
+        messagebox.showerror("Failed", "All Fields are Required.")
+        return  
 
     extractBid = "SELECT book_id FROM " + bookTable
     try:
@@ -162,5 +167,7 @@ def issueBook():
                        font=('Gill Sans MT', 12),
                        command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
+    # Running SendEmail on Enter
+    root.bind('<Return>', issue)
     root.resizable(0, 0)
     root.mainloop()
