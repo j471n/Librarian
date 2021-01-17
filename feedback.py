@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def sendEmail(self):
+def sendEmail(event=None):
     global email, password, msg
     senderEmail = email.get()
     senderPassword = password.get()

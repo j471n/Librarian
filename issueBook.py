@@ -24,7 +24,7 @@ allBid = []  #To store all the Book ID’s
 
 
 
-def issue(event):
+def issue(event=None):
 
     global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date, issuedName
 

@@ -20,7 +20,7 @@ bookTable = "books"
 allBid = []  #To store all the Book ID’s
 
 
-def returnn(event):
+def returnn(event=None):
 
     global SubmitBtn, labelFrame, lb1, bookInfo1, quitBtn, root, Canvas1, status, check
 

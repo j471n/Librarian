@@ -11,7 +11,7 @@ load_dotenv()
 
 
 # Adding book to Database
-def bookRegister(event):
+def bookRegister(event=None):
 
     book_id = bookInfo1.get()
     title = bookInfo2.get()

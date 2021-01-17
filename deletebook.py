@@ -19,7 +19,7 @@ issueTable = "books_issued"
 
 
 
-def deleteBook(event):
+def deleteBook(event=None):
 
     bid = bookInfo1.get()
     reason = bookInfo2.get()
