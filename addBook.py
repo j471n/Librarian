@@ -2,10 +2,8 @@ from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
 import pymysql
-from os import getenv, stat
+from os import getenv
 from dotenv import load_dotenv
-
-import sys
 
 load_dotenv()
 
@@ -17,9 +15,9 @@ def bookRegister(event=None):
     title = bookInfo2.get()
     author = bookInfo3.get()
     publication = bookInfo4.get()
-    status = bookInfo5.get().lower()
+    status = bookInfo5.lower()
 
-    if status not in ["avail", "issued"] or book_id == "" or author == "" or title == "":
+    if status != "avail" or book_id == "" or author == "" or title == "" or publication == "":
         root.destroy()
         messagebox.showerror("Failed", "All Fields are Required.")
         return
@@ -28,9 +26,9 @@ def bookRegister(event=None):
     try:
         cur.execute(insertBooks)
         con.commit()
-        messagebox.showinfo('Success', "Book added successfully")
+        messagebox.showinfo('Success', "Book Added Successfully")
     except:
-        messagebox.showinfo("Error", "Can't add data into Database")
+        messagebox.showinfo("Error", "Can't Add Data Into Database")
         print(messagebox.ERROR)
 
     print("Book ID : ",book_id)
@@ -38,6 +36,8 @@ def bookRegister(event=None):
     print("Book Author : ",author)
     print("Publication : ", publication)
     print("Status : ", status)
+    root.destroy()
+
 
 
 def addBook():
@@ -123,16 +123,7 @@ def addBook():
     bookInfo4.place(relx=0.35, rely=0.65, relwidth=0.52, relheight=0.08)
 
     # Book Status
-
-    lb5 = Label(labelFrame,
-                text="Avail / Issued : ",
-                bg='black',
-                fg='white',
-                font=('Gill Sans MT', 12))
-    lb5.place(relx=0.1, rely=0.80, relheight=0.08)
-
-    bookInfo5 = Entry(labelFrame)
-    bookInfo5.place(relx=0.35, rely=0.80, relwidth=0.52, relheight=0.08)
+    bookInfo5 = 'Avail'
 
     # Submit Button
     SubmitBtn = Button(root,
