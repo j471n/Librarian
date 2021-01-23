@@ -26,11 +26,8 @@ def sendEmail(event=None):
     if re.search(regx, senderEmail):
         print("Valid Email")
     else:
+        root.destroy()
         messagebox.showerror("Failed", "Invalid Email Address")
-        # root.destroy()
-        email.delete(0, END)
-        password.delete(0, END)
-        msg.delete(1.0, END)
         return
 
     mail = Mailer(email= senderEmail, password=senderPassword)
@@ -42,13 +39,14 @@ def sendEmail(event=None):
 
     if mail.status:
         messagebox.showinfo("Success", "Email Send Successfully")
-        root.destroy()
         return
     else:
         messagebox.showerror("Failed", "Something Went Wrong")
         email.delete(0, END)
         password.delete(0, END)
         msg.delete(1.0, END)
+    root.destroy()
+
 
 
 # Changing the Button state on the basis of fields
@@ -157,6 +155,6 @@ def feedBack():
 
     # Running SendEmail on Enter
     root.bind('<Return>', sendEmail)
-    
+
     root.resizable(0,0)
     root.mainloop()

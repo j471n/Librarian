@@ -35,7 +35,7 @@ def issue(event=None):
     if bid == "" or issueto == "":
         root.destroy()
         messagebox.showerror("Failed", "All Fields are Required.")
-        return  
+        return
 
     extractBid = "SELECT book_id FROM " + bookTable
     try:
@@ -95,6 +95,7 @@ def issue(event=None):
     except:
         messagebox.showinfo("Search Error", "The value entered is wrong, Try again.")
     allBid.clear()
+    root.destroy()
 
 
 

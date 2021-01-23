@@ -51,8 +51,10 @@ def returnn(event=None):
                 status = False
 
         else:
+            root.destroy()
             messagebox.showinfo("Error", "Book ID not present")
     except:
+        root.destroy()
         messagebox.showinfo("Error", "Can't fetch Book IDs")
 
     # SQL Query
