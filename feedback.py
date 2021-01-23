@@ -158,5 +158,5 @@ def feedBack():
     # Running SendEmail on Enter
     root.bind('<Return>', sendEmail)
     
-    # root.resizable(0,0)
+    root.resizable(0,0)
     root.mainloop()
