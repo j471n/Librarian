@@ -8,6 +8,7 @@ import re
 from dotenv import load_dotenv
 import webbrowser
 from PIL import ImageTk, Image  #PIL -> Pillow
+from about import aboutUS
 
 load_dotenv()
 
@@ -69,7 +70,7 @@ def callback(event):
 
 def feedBack():
     global root
-    root = Tk()
+    root = Toplevel()
     root.title("Feedback")
     root.iconbitmap('img/feedback-icon.ico')
     root.geometry("600x415")
