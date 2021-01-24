@@ -22,7 +22,8 @@ def bookRegister(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    insertBooks = "INSERT INTO " + bookTable + " VALUES ('" + book_id + "','" + title + "','" + author + "','" + publication + "','" + status + "')"
+    insertBooks = f"INSERT INTO {bookTable} (book_id, title, author, publication, status) VALUES ('{book_id}', '{title}', '{author}', '{publication}','{status}');"
+    
     try:
         cur.execute(insertBooks)
         con.commit()
