@@ -30,13 +30,10 @@ def deleteBook(event=None):
         return  
 
     deleteSql = "DELETE FROM " + bookTable + " WHERE book_id = '" + bid + "'"
-    deleteIssue = "DELETE FROM " + issueTable + " WHERE bid = '" + bid + "'"
     book_name = "SELECT title FROM " + bookTable + " WHERE book_id = '" + bid + "'"
 
     try:
         cur.execute(deleteSql)
-        con.commit()
-        cur.execute(deleteIssue)
         con.commit()
         cur.execute(book_name)
         con.commit()
