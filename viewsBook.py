@@ -22,8 +22,9 @@ def connectDB():
         q1 = f"CREATE DATABASE {getenv('DB_NAME')};"
         q2 = f"use {getenv('DB_NAME')};"
         q3 = 'CREATE TABLE books (book_id VARCHAR(200) PRIMARY KEY, title VARCHAR(50), author VARCHAR(30),publication VARCHAR(100), status VARCHAR(30), issued_date VARCHAR(15), issued_to VARCHAR(25));'
-        q4 = "CREATE TABLE books_issued (bid VARCHAR(200) PRIMARY KEY, issuedto VARCHAR(50),issued_date VARCHAR(15));"
-        con = pymysql.connect(host="localhost", user='root', password='root')
+        con = pymysql.connect(host="localhost",
+                              user=getenv('USER'),
+                              password=getenv('DB_PASS'))
         cur = con.cursor()
 
         cur.execute(q1)
@@ -32,12 +33,10 @@ def connectDB():
         con.commit()
         cur.execute(q3)
         con.commit()
-        cur.execute(q4)
-        con.commit()
 
         con = pymysql.connect(host="localhost",
-                              user='root',
-                              password='root',
+                              user=getenv('USER'),
+                              password=getenv('DB_PASS'),
                               database=getenv('DB_NAME'))
         cur = con.cursor()
         print("Database Connected, New Created")
