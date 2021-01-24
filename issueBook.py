@@ -20,9 +20,6 @@ cur = con.cursor()  #cur -> cursor
 bookTable = "books"
 issueTable = "books_issued"
 
-allBid = []  #To store all the Book ID’s
-
-
 
 def issue(event=None):
 
@@ -37,39 +34,30 @@ def issue(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    extractBid = "SELECT book_id FROM " + bookTable
+    updateStatus = f"UPDATE {bookTable} SET status = 'issued', issued_date = '{issueDate}', issued_to = '{issueto}' WHERE book_id = {bid};"
+    issueDateAndName = f"SELECT issued_date, issued_to FROM {bookTable} WHERE book_id = {bid};"
+    getBookName = f"SELECT title FROM {bookTable} WHERE book_id = {bid};"
+    checkAvail = f"SELECT status FROM {bookTable} WHERE book_id = {bid};"
+
     try:
-        cur.execute(extractBid)
+        cur.execute(checkAvail)
         con.commit()
-        for i in cur:
-            allBid.append(i[0])
+        for field in cur:
+            global s
+            check = field[0]
+            print(check)
 
-        if bid in allBid:
-            checkAvail = "SELECT status FROM " + bookTable + " WHERE book_id = '" + bid + "'"
-            cur.execute(checkAvail)
+        if check == 'issued':
+            cur.execute(issueDateAndName)
             con.commit()
+
             for i in cur:
-                check = i[0]
-
-            if check == 'avail':
-                status = True
-            else:
-                status = False
-
-        else:
-            messagebox.showinfo("Error", "Book ID not present")
-    except:
-        messagebox.showinfo("Error", "Can't fetch Book IDs")
-
-    issueSql = "INSERT INTO " + issueTable + " VALUES ('" + bid + "','" + issueto + "','" + issueDate + "')"
-    updateStatus = "UPDATE " + bookTable + " SET status = 'issued' WHERE book_id = '" + bid + "'"
-    issueDateAndName = "SELECT issued_date, issuedto FROM " + issueTable + " WHERE bid = '" + bid + "'"
-    getBookName = "SELECT title FROM " + bookTable + " WHERE book_id = " + bid + ";"
-
-    try:
-        if bid in allBid and status == True:
-            cur.execute(issueSql)
-            con.commit()
+                Date = i[0]
+                issuedName = i[1]
+            root.destroy()
+            messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  str(issuedName).capitalize())
+            return
+        elif check == 'avail':
             cur.execute(updateStatus)
             con.commit()
             cur.execute(getBookName)
@@ -80,21 +68,8 @@ def issue(event=None):
                 bName = i[0].capitalize()
             root.destroy()
             messagebox.showinfo('Success', f"Book Name - {bName}\nSuccessfully Issued on " + str(issueDate) + " to " + str(issueto).capitalize())
-        else:
-            allBid.clear()
-            cur.execute(issueDateAndName)
-            con.commit()
-
-            for i in cur:
-                Date = i[0]
-                issuedName = i[1]
-
-            root.destroy()
-            messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  str(issuedName).capitalize())
-            return
     except:
         messagebox.showinfo("Search Error", "The value entered is wrong, Try again.")
-    allBid.clear()
     root.destroy()
 
 
