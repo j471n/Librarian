@@ -21,7 +21,7 @@ def connectDB():
     except:
         q1 = f"CREATE DATABASE {getenv('DB_NAME')};"
         q2 = f"use {getenv('DB_NAME')};"
-        q3 = 'CREATE TABLE books (book_id VARCHAR(200) PRIMARY KEY, title VARCHAR(50), author VARCHAR(30),publication VARCHAR(100), status VARCHAR(30));'
+        q3 = 'CREATE TABLE books (book_id VARCHAR(200) PRIMARY KEY, title VARCHAR(50), author VARCHAR(30),publication VARCHAR(100), status VARCHAR(30), issued_date VARCHAR(15), issued_to VARCHAR(25));'
         q4 = "CREATE TABLE books_issued (bid VARCHAR(200) PRIMARY KEY, issuedto VARCHAR(50),issued_date VARCHAR(15));"
         con = pymysql.connect(host="localhost", user='root', password='root')
         cur = con.cursor()
@@ -62,13 +62,13 @@ def View():
     root = Toplevel()
     root.title("View Details")
     root.minsize(width=400, height=400)
-    root.geometry("600x500")
+    root.geometry("900x500")
     root.iconbitmap('img/logo.ico')
 
     #Adding Image to Add Book
     global img
     bg = Image.open("img/background/viewsBook.jpg")
-    bg = bg.resize((600, 500), Image.ANTIALIAS)
+    bg = bg.resize((900, 500), Image.ANTIALIAS)
     img = ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
 
@@ -91,10 +91,10 @@ def View():
 
     # ScrollBar Adding to Treeview
     tree_scroll = Scrollbar(root, orient="vertical", command=detail_tree.yview)
-    tree_scroll.place(relx=0.978, rely=0.3, relheight=0.54, relwidth=0.020)
+    tree_scroll.place(relx=0.985, rely=0.3, relheight=0.54, relwidth=0.015)
     detail_tree.configure(yscrollcommand=tree_scroll.set)
 
-    detail_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status")
+    detail_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status", "Issued Date", "Issued To")
 
     #Heading List
     detail_tree.heading("#0", text="")
@@ -103,6 +103,8 @@ def View():
     detail_tree.heading("Author", text="Author", anchor=CENTER)
     detail_tree.heading("Publication", text="Publication", anchor=CENTER)
     detail_tree.heading("Status", text="Status", anchor=CENTER)
+    detail_tree.heading("Issued Date", text="Issued Date", anchor=CENTER)
+    detail_tree.heading("Issued To", text="Issued To", anchor=CENTER)
     # Colums List
     detail_tree.column('#0', width=0, stretch=NO)
     detail_tree.column('BID', width=10, anchor=CENTER)
@@ -110,6 +112,8 @@ def View():
     detail_tree.column('Author', width=10, anchor=CENTER)
     detail_tree.column('Publication', width=20, anchor=CENTER)
     detail_tree.column('Status', width=10, anchor=CENTER)
+    detail_tree.column('Issued Date', width=10, anchor=CENTER)
+    detail_tree.column('Issued To', width=10, anchor=CENTER)
 
     # Styling Treeview
     style = ttk.Style()
@@ -129,14 +133,27 @@ def View():
         cur.execute(getBooks)
         con.commit()
 
+        # Adding Data to the Treeview Table
         for data in cur:
+            data = list(data)
             print(data)
+
+            # Checking if the column is None then change the value to -
+            for i in range(len(data)):
+                if data[i] == None:
+                    data[i] = '-'
+
+
             detail_tree.insert(parent='', index=END, iid=count, text="",
-                    values=(data[0],
-                    data[1].capitalize(),
-                    data[2].capitalize(),
-                    data[3].capitalize(),
-                    data[4].capitalize())
+                    values=(
+                        data[0],
+                        data[1].capitalize(),
+                        data[2].capitalize(),
+                        data[3].capitalize(),
+                        data[4].capitalize(),
+                        data[5],
+                        data[6].capitalize()
+                    )
             )
             count += 1
 
