@@ -17,12 +17,10 @@ cur = con.cursor()  #cur -> cursor
 issueTable = "books_issued"
 bookTable = "books"
 
-allBid = []  #To store all the Book ID’s
-
 
 def returnn(event=None):
 
-    global SubmitBtn, labelFrame, lb1, bookInfo1, quitBtn, root, Canvas1, status, check
+    global SubmitBtn, labelFrame, lb1, bookInfo1, quitBtn, root, Canvas1, status, check, title
 
     bid = bookInfo1.get()
 
@@ -31,56 +29,33 @@ def returnn(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    extractBid = "SELECT bid FROM " + issueTable
+    updateStatus = f"UPDATE {bookTable} SET status = 'avail', issued_date = NULL, issued_to = NULL WHERE book_id = {bid};"
+    checkAvail = f"SELECT status, title FROM {bookTable} WHERE book_id = {bid};"
+
+
     try:
-        cur.execute(extractBid)
+        cur.execute(checkAvail)
         con.commit()
-        for i in cur:
-            allBid.append(i[0])
+        for field in cur:
+            global s
+            check = field[0]
+            title = field[1]
+            print(check)
 
-        if bid in allBid:
-            checkAvail = "SELECT status FROM " + bookTable + " WHERE book_id = '" + bid + "'"
-            cur.execute(checkAvail)
-            con.commit()
-            for i in cur:
-                check = i[0]
-
-            if check == 'issued':
-                status = True
-            else:
-                status = False
-
-        else:
-            root.destroy()
-            messagebox.showinfo("Error", "Book ID not present")
-    except:
-        root.destroy()
-        messagebox.showinfo("Error", "Can't fetch Book IDs")
-
-    # SQL Query
-    issueSql = "DELETE FROM " + issueTable + " WHERE bid = '" + bid + "'"
-    updateStatus = "UPDATE " + bookTable + " SET status = 'avail' WHERE book_id = '" + bid + "'"
-
-    try:
-        if bid in allBid and status == True:
-            cur.execute(issueSql)
-            con.commit()
+        if check == 'issued':
             cur.execute(updateStatus)
             con.commit()
             root.destroy()
-            messagebox.showinfo('Success', "Book Returned Successfully")
-        else:
-            allBid.clear()
+            messagebox.showinfo('Success', f"Book Name - {title}\nBook Successfully Returned")
+            return
+
+        elif check == 'avail':
             root.destroy()
-            messagebox.showinfo('Message', "Please check the book ID")
+            messagebox.showwarning('Warning', "The Book has not been Issued Yet.")
             return
     except:
-        messagebox.showinfo("Search Error", "The value entered is wrong, Try again")
-
-    allBid.clear()
+        messagebox.showinfo("Search Error", "The value entered is wrong, Try again.")
     root.destroy()
-
-
 
 
 def returnBook():
