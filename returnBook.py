@@ -24,7 +24,7 @@ def returnn(event=None):
 
     bid = bookInfo1.get()
 
-    if bid=="":
+    if bid == "":
         root.destroy()
         messagebox.showerror("Failed", "All Fields are Required.")
         return
@@ -86,7 +86,7 @@ def returnBook():
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     labelFrame = Frame(root, bg='black')
-    labelFrame.place(relx=0.1, rely=0.4, relwidth=0.8, relheight=0.4)
+    labelFrame.place(relx=0.1, rely=0.35, relwidth=0.8, relheight=0.4)
 
     # Book ID to Delete
     lb1 = Label(labelFrame,
@@ -94,10 +94,25 @@ def returnBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 14))
-    lb1.place(relx=0.1, rely=0.364)
+    lb1.place(relx=0.1, rely=0.114)
 
     bookInfo1 = Entry(labelFrame)
-    bookInfo1.place(relx=0.4, rely=0.4, relwidth=0.5)
+    bookInfo1.place(relx=0.4, rely=0.15, relwidth=0.5)
+
+    # Feedback
+    lb2 = Label(labelFrame,
+                text="Feedback :\n(optional)  ",
+                bg='black',
+                fg='white',
+                font=('Gill Sans MT', 14))
+    lb2.place(relx=0.1, rely=0.314)
+
+    bookInfo2 = Text(labelFrame,
+                     height=5,
+                     padx=10,
+                     pady=10,
+                     font=('Gill Sans MT', 10))
+    bookInfo2.place(relx=0.4, rely=0.3, relwidth=0.5)
 
     #Submit Button
     SubmitBtn = Button(root,
