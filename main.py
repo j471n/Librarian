@@ -72,5 +72,9 @@ btn6.place(relx=0.03, rely=0.87, relwidth=0.1, relheight=0.1)
 btn7 = Button(root, text="", bg='black', border = 0.8, image=img7, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER, command=aboutUS)
 btn7.place(relx=0.03, rely=0.77, relwidth=0.1, relheight=0.1)
 
+
+Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
+
+
 root.resizable(0,0)
 root.mainloop()
