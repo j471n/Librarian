@@ -20,11 +20,8 @@ cur = con.cursor()  #cur -> cursor
 bookTable = "books"
 issueTable = "books_issued"
 
-allBid = []  #To store all the Book ID’s
 
-
-
-def issue():
+def issue(event=None):
 
     global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date, issuedName
 
@@ -32,39 +29,35 @@ def issue():
     issueto = inf2.get()
     issueDate = date.today().strftime("%b %d, %Y")
 
-    extractBid = "SELECT book_id FROM " + bookTable
+    if bid == "" or issueto == "":
+        root.destroy()
+        messagebox.showerror("Failed", "All Fields are Required.")
+        return
+
+    updateStatus = f"UPDATE {bookTable} SET status = 'issued', issued_date = '{issueDate}', issued_to = '{issueto}' WHERE book_id = {bid};"
+    issueDateAndName = f"SELECT issued_date, issued_to FROM {bookTable} WHERE book_id = {bid};"
+    getBookName = f"SELECT title FROM {bookTable} WHERE book_id = {bid};"
+    checkAvail = f"SELECT status FROM {bookTable} WHERE book_id = {bid};"
+
     try:
-        cur.execute(extractBid)
+        cur.execute(checkAvail)
         con.commit()
-        for i in cur:
-            allBid.append(i[0])
+        for field in cur:
+            global s
+            check = field[0]
+            print(check)
 
-        if bid in allBid:
-            checkAvail = "SELECT status FROM " + bookTable + " WHERE book_id = '" + bid + "'"
-            cur.execute(checkAvail)
+        if check == 'issued':
+            cur.execute(issueDateAndName)
             con.commit()
+
             for i in cur:
-                check = i[0]
-
-            if check == 'avail':
-                status = True
-            else:
-                status = False
-
-        else:
-            messagebox.showinfo("Error", "Book ID not present")
-    except:
-        messagebox.showinfo("Error", "Can't fetch Book IDs")
-
-    issueSql = "INSERT INTO " + issueTable + " VALUES ('" + bid + "','" + issueto + "','" + issueDate + "')"
-    updateStatus = "UPDATE " + bookTable + " SET status = 'issued' WHERE book_id = '" + bid + "'"
-    issueDateAndName = "SELECT issued_date, issuedto FROM " + issueTable + " WHERE bid = '" + bid + "'"
-    getBookName = "SELECT title FROM " + bookTable + " WHERE book_id = " + bid + ";"
-
-    try:
-        if bid in allBid and status == True:
-            cur.execute(issueSql)
-            con.commit()
+                Date = i[0]
+                issuedName = i[1]
+            root.destroy()
+            messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  str(issuedName).capitalize())
+            return
+        elif check == 'avail':
             cur.execute(updateStatus)
             con.commit()
             cur.execute(getBookName)
@@ -75,21 +68,9 @@ def issue():
                 bName = i[0].capitalize()
             root.destroy()
             messagebox.showinfo('Success', f"Book Name - {bName}\nSuccessfully Issued on " + str(issueDate) + " to " + str(issueto).capitalize())
-        else:
-            allBid.clear()
-            cur.execute(issueDateAndName)
-            con.commit()
-
-            for i in cur:
-                Date = i[0]
-                issuedName = i[1]
-
-            root.destroy()
-            messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  str(issuedName).capitalize())
-            return
     except:
         messagebox.showinfo("Search Error", "The value entered is wrong, Try again.")
-    allBid.clear()
+    root.destroy()
 
 
 
@@ -98,16 +79,18 @@ def issueBook():
 
     global issueBtn, labelFrame, lb1, inf1, inf2,inf3, cancelBtn, root, Canvas1, status
 
-    root = Tk()
+    root = Toplevel()
     root.title("Issue Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
     root.iconbitmap('img/logo.ico')
 
-    Canvas1 = Canvas(root)
-    Canvas1.config(bg="#D6ED17")
-    Canvas1.pack(expand=True, fill=BOTH)
-
+    #Adding Image to Add Book
+    global img
+    bg = Image.open("img/background/issueBook.jpg")
+    bg = bg.resize((600, 500), Image.ANTIALIAS)
+    img = ImageTk.PhotoImage(bg)
+    Label(root, image=img).pack()
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
     headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
@@ -119,7 +102,7 @@ def issueBook():
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     labelFrame = Frame(root, bg='black')
-    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.5)
+    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.4)
 
     # Book ID
     lb1 = Label(labelFrame,
@@ -127,10 +110,10 @@ def issueBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 14))
-    lb1.place(relx=0.05, rely=0.2)
+    lb1.place(relx=0.1, rely=0.25)
 
     inf1 = Entry(labelFrame)
-    inf1.place(relx=0.3, rely=0.2, relwidth=0.62)
+    inf1.place(relx=0.4, rely=0.3, relwidth=0.5)
 
     # Issued To Student name
     lb2 = Label(labelFrame,
@@ -138,10 +121,10 @@ def issueBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 14))
-    lb2.place(relx=0.05, rely=0.4)
+    lb2.place(relx=0.1, rely=0.51)
 
     inf2 = Entry(labelFrame)
-    inf2.place(relx=0.3, rely=0.4, relwidth=0.62)
+    inf2.place(relx=0.4, rely=0.55, relwidth=0.5)
 
     #Issue Button
     issueBtn = Button(root,
@@ -160,5 +143,7 @@ def issueBook():
                        font=('Gill Sans MT', 12),
                        command=root.destroy)
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
+    # Running SendEmail on Enter
+    root.bind('<Return>', issue)
     root.resizable(0, 0)
     root.mainloop()

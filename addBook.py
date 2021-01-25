@@ -9,23 +9,29 @@ load_dotenv()
 
 
 # Adding book to Database
-def bookRegister():
+def bookRegister(event=None):
 
     book_id = bookInfo1.get()
     title = bookInfo2.get()
     author = bookInfo3.get()
     publication = bookInfo4.get()
-    status = bookInfo5.get()
-    status = status.lower()
+    status = bookInfo5.lower()
 
-    insertBooks = "INSERT INTO " + bookTable + " VALUES ('" + book_id + "','" + title + "','" + author + "','" + publication + "','" + status + "')"
+    if status != "avail" or book_id == "" or author == "" or title == "" or publication == "":
+        root.destroy()
+        messagebox.showerror("Failed", "All Fields are Required.")
+        return
+
+    insertBooks = f"INSERT INTO {bookTable} (book_id, title, author, publication, status) VALUES ('{book_id}', '{title}', '{author}', '{publication}','{status}');"
+    
     try:
         cur.execute(insertBooks)
         con.commit()
-        messagebox.showinfo('Success', "Book added successfully")
+        messagebox.showinfo('Success', "Book Added Successfully")
     except:
-        messagebox.showinfo("Error", "Can't add data into Database")
+        messagebox.showinfo("Error", "Can't Add Data Into Database")
         print(messagebox.ERROR)
+
     print("Book ID : ",book_id)
     print("Book Title : ", title)
     print("Book Author : ",author)
@@ -34,11 +40,12 @@ def bookRegister():
     root.destroy()
 
 
+
 def addBook():
 
-    global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, Canvas1, con, cur, bookTable, root
+    global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, con, cur, bookTable, root
 
-    root = Tk()
+    root = Toplevel()
     root.title("Add Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
@@ -47,13 +54,14 @@ def addBook():
     con = pymysql.connect(host="localhost", user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
     cur = con.cursor()  #cur -> cursor
 
+    #Adding Image to Add Book
+    global img
+    bg = Image.open("img/background/addBook.jpg")
+    bg = bg.resize((600, 500), Image.ANTIALIAS)
+    img = ImageTk.PhotoImage(bg)
+    Label(root, image=img).pack()
 
-    # Enter Table Names here
     bookTable = "books"  # Book Table
-
-    Canvas1 = Canvas(root)
-    Canvas1.config(bg="#ff6e40")
-    Canvas1.pack(expand=True, fill=BOTH)
 
     # A container
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
@@ -69,7 +77,7 @@ def addBook():
 
     # Label Frame
     labelFrame = Frame(root, bg='black')
-    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.4)
+    labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.45)
 
     # Book ID
     lb1 = Label(labelFrame,
@@ -77,7 +85,7 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb1.place(relx=0.05, rely=0.2, relheight=0.08)
+    lb1.place(relx=0.1, rely=0.2, relheight=0.08)
 
     bookInfo1 = Entry(labelFrame)
     bookInfo1.place(relx=0.35, rely=0.2, relwidth=0.52, relheight=0.08)
@@ -88,7 +96,7 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb2.place(relx=0.05, rely=0.35, relheight=0.08)
+    lb2.place(relx=0.1, rely=0.35, relheight=0.08)
 
     bookInfo2 = Entry(labelFrame)
     bookInfo2.place(relx=0.35, rely=0.35, relwidth=0.52, relheight=0.08)
@@ -99,7 +107,7 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb3.place(relx=0.05, rely=0.50, relheight=0.08)
+    lb3.place(relx=0.1, rely=0.50, relheight=0.08)
 
     bookInfo3 = Entry(labelFrame)
     bookInfo3.place(relx=0.35, rely=0.50, relwidth=0.52, relheight=0.08)
@@ -110,22 +118,13 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb4.place(relx=0.05, rely=0.65, relheight=0.08)
+    lb4.place(relx=0.1, rely=0.65, relheight=0.08)
 
     bookInfo4 = Entry(labelFrame)
     bookInfo4.place(relx=0.35, rely=0.65, relwidth=0.52, relheight=0.08)
 
     # Book Status
-    
-    lb5 = Label(labelFrame,
-                text="Status(Avail/issued) : ",
-                bg='black',
-                fg='white',
-                font=('Gill Sans MT', 12))
-    lb5.place(relx=0.05, rely=0.80, relheight=0.08)
-
-    bookInfo5 = Entry(labelFrame)
-    bookInfo5.place(relx=0.35, rely=0.80, relwidth=0.52, relheight=0.08)
+    bookInfo5 = 'Avail'
 
     # Submit Button
     SubmitBtn = Button(root,
@@ -144,5 +143,7 @@ def addBook():
                        command=root.destroy,
                        font=('Gill Sans MT', 12))
     cancelBtn.place(relx=0.53, rely=0.9, relwidth=0.18, relheight=0.08)
+
+    root.bind('<Return>', bookRegister)
     root.resizable(0, 0)
     root.mainloop()
