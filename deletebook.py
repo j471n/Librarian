@@ -15,7 +15,7 @@ cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
 bookTable = "books"
-issueTable = "books_issued"
+posTable = "position"
 MIN_LENGTH = 15
 
 # To Check the Length of the Reason
@@ -33,6 +33,7 @@ def deleteBook(event=None):
     bid = bookInfo1.get()
     reason = bookInfo2.get('1.0', END)
     print("Reason : ", reason)
+    print("bid : ", bid)
 
     if bid == "":
         root.destroy()
@@ -43,8 +44,9 @@ def deleteBook(event=None):
         messagebox.showerror('Failed', f"Lenght of the Reason Field must be {MIN_LENGTH}")
         return
 
-    deleteSql = f"DELETE FROM {bookTable} WHERE book_id = {bid};"
-    book_name = f"SELECT title FROM {bookTable} WHERE book_id = {bid};"
+    deleteSql = f"DELETE FROM {bookTable} WHERE book_id = '{bid}';"
+    deletePosition = f"DELETE FROM {posTable} WHERE bid = '{bid}';"
+    book_name = f"SELECT title FROM {bookTable} WHERE book_id = '{bid}';"
 
     global BookName
 
@@ -54,6 +56,8 @@ def deleteBook(event=None):
         for name in cur:
             BookName = name[0]
         cur.execute(deleteSql)
+        con.commit()
+        cur.execute(deletePosition)
         con.commit()
 
         messagebox.showinfo('Success', f"Book Name - {BookName}\nBook Record Deleted Successfully")
