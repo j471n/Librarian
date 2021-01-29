@@ -21,7 +21,8 @@ def connectDB():
     except:
         q1 = f"CREATE DATABASE {getenv('DB_NAME')};"
         q2 = f"use {getenv('DB_NAME')};"
-        q3 = 'CREATE TABLE books (book_id VARCHAR(200) PRIMARY KEY, title VARCHAR(50), author VARCHAR(30),publication VARCHAR(100), status VARCHAR(30), issued_date VARCHAR(15), issued_to VARCHAR(25));'
+        q3 = 'CREATE TABLE books (book_id VARCHAR(200) PRIMARY KEY, title VARCHAR(50), author VARCHAR(30),publication VARCHAR(100), status VARCHAR(30), phyLocation VARCHAR(50), issued_date VARCHAR(15), issued_to VARCHAR(25));'
+        q4 = "CREATE TABLE position (bid VARCHAR(200) PRIMARY KEY, location VARCHAR(50));"
         con = pymysql.connect(host="localhost",
                               user=getenv('USER'),
                               password=getenv('DB_PASS'))
@@ -32,6 +33,8 @@ def connectDB():
         cur.execute(q2)
         con.commit()
         cur.execute(q3)
+        con.commit()
+        cur.execute(q4)
         con.commit()
 
         con = pymysql.connect(host="localhost",
@@ -49,7 +52,7 @@ bookTable = "books"
 
 def View():
 
-    
+
     root = Toplevel()
     root.title("View Details")
     root.minsize(width=400, height=400)
