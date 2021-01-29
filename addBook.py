@@ -4,6 +4,7 @@ from tkinter import messagebox
 import pymysql
 from os import getenv
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
@@ -16,18 +17,29 @@ def bookRegister(event=None):
     author = bookInfo3.get()
     publication = bookInfo4.get()
     status = bookInfo5.lower()
+    pos = bookInfo6.get()
 
     if status != "avail" or book_id == "" or author == "" or title == "" or publication == "":
         root.destroy()
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    insertBooks = f"INSERT INTO {bookTable} (book_id, title, author, publication, status) VALUES ('{book_id}', '{title}', '{author}', '{publication}','{status}');"
-    
+    # Checking that Position of the Bok Should inclue -, _, and Digits
+    if not any(re.findall(r'-|_|/|\d', pos, re.IGNORECASE)) or not re.sub('[^\d.,]' , '', pos):
+        root.destroy()
+        messagebox.showerror("Failed", "Location Field should include '-' or '_' and Numbers (0-9)")
+        return
+
+    insertBooks = f"INSERT INTO {bookTable} (book_id, title, author, publication, status, location) VALUES ('{book_id}', '{title}', '{author}', '{publication}','{status}', '{pos}');"
+
+    insertPosition = f"INSERT INTO {posTable} (bid, location) VALUES ('{book_id}', '{pos}');"
+
     try:
         cur.execute(insertBooks)
         con.commit()
-        messagebox.showinfo('Success', "Book Added Successfully")
+        cur.execute(insertPosition)
+        con.commit()
+        messagebox.showinfo('Success', f"Book Added Successfully. It should be at {pos} in Pysical Library")
     except:
         messagebox.showinfo("Error", "Can't Add Data Into Database")
         print(messagebox.ERROR)
@@ -37,13 +49,14 @@ def bookRegister(event=None):
     print("Book Author : ",author)
     print("Publication : ", publication)
     print("Status : ", status)
+    print("Position : ", pos)
     root.destroy()
 
 
 
 def addBook():
 
-    global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, con, cur, bookTable, root
+    global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, bookInfo6, con, cur, bookTable, posTable, root
 
     root = Toplevel()
     root.title("Add Book")
@@ -62,6 +75,7 @@ def addBook():
     Label(root, image=img).pack()
 
     bookTable = "books"  # Book Table
+    posTable = 'position' # Position Table
 
     # A container
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
@@ -85,10 +99,10 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb1.place(relx=0.1, rely=0.2, relheight=0.08)
+    lb1.place(relx=0.1, rely=0.14, relheight=0.08)
 
     bookInfo1 = Entry(labelFrame)
-    bookInfo1.place(relx=0.35, rely=0.2, relwidth=0.52, relheight=0.08)
+    bookInfo1.place(relx=0.35, rely=0.15, relwidth=0.52, relheight=0.08)
 
     # Title
     lb2 = Label(labelFrame,
@@ -96,10 +110,10 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb2.place(relx=0.1, rely=0.35, relheight=0.08)
+    lb2.place(relx=0.1, rely=0.29, relheight=0.08)
 
     bookInfo2 = Entry(labelFrame)
-    bookInfo2.place(relx=0.35, rely=0.35, relwidth=0.52, relheight=0.08)
+    bookInfo2.place(relx=0.35, rely=0.3, relwidth=0.52, relheight=0.08)
 
     # Book Author
     lb3 = Label(labelFrame,
@@ -107,10 +121,10 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb3.place(relx=0.1, rely=0.50, relheight=0.08)
+    lb3.place(relx=0.1, rely=0.44, relheight=0.08)
 
     bookInfo3 = Entry(labelFrame)
-    bookInfo3.place(relx=0.35, rely=0.50, relwidth=0.52, relheight=0.08)
+    bookInfo3.place(relx=0.35, rely=0.45, relwidth=0.52, relheight=0.08)
 
     # Book Publication
     lb4 = Label(labelFrame,
@@ -118,13 +132,24 @@ def addBook():
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 12))
-    lb4.place(relx=0.1, rely=0.65, relheight=0.08)
+    lb4.place(relx=0.1, rely=0.59, relheight=0.08)
 
     bookInfo4 = Entry(labelFrame)
-    bookInfo4.place(relx=0.35, rely=0.65, relwidth=0.52, relheight=0.08)
+    bookInfo4.place(relx=0.35, rely=0.60, relwidth=0.52, relheight=0.08)
 
     # Book Status
     bookInfo5 = 'Avail'
+
+    # Position of the Book
+    lb6 = Label(labelFrame,
+                text="Location : ",
+                bg='black',
+                fg='white',
+                font=('Gill Sans MT', 12))
+    lb6.place(relx=0.1, rely=0.74, relheight=0.08)
+
+    bookInfo6 = Entry(labelFrame)
+    bookInfo6.place(relx=0.35, rely=0.75, relwidth=0.52, relheight=0.08)
 
     # Submit Button
     SubmitBtn = Button(root,
