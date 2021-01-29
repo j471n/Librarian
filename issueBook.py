@@ -23,7 +23,7 @@ issueTable = "books_issued"
 
 def issue(event=None):
 
-    global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date, issuedName
+    global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date,location, issuedName
 
     bid = inf1.get()
     issueto = inf2.get()
@@ -34,10 +34,10 @@ def issue(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    updateStatus = f"UPDATE {bookTable} SET status = 'issued', issued_date = '{issueDate}', issued_to = '{issueto}' WHERE book_id = {bid};"
-    issueDateAndName = f"SELECT issued_date, issued_to FROM {bookTable} WHERE book_id = {bid};"
-    getBookName = f"SELECT title FROM {bookTable} WHERE book_id = {bid};"
-    checkAvail = f"SELECT status FROM {bookTable} WHERE book_id = {bid};"
+    updateStatus = f"UPDATE {bookTable} SET status = 'issued', phyLocation = NULL, issued_date = '{issueDate}', issued_to = '{issueto}' WHERE book_id = '{bid}';"
+    issueDateAndName = f"SELECT issued_date, issued_to FROM {bookTable} WHERE book_id = '{bid}';"
+    getBookDetails = f"SELECT title, phyLocation FROM {bookTable} WHERE book_id = '{bid}';"
+    checkAvail = f"SELECT status FROM {bookTable} WHERE book_id = '{bid}';"
 
     try:
         cur.execute(checkAvail)
@@ -58,16 +58,19 @@ def issue(event=None):
             messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  str(issuedName).capitalize())
             return
         elif check == 'avail':
-            cur.execute(updateStatus)
-            con.commit()
-            cur.execute(getBookName)
+            cur.execute(getBookDetails)
             con.commit()
 
             bName = ""
+
             for i in cur:
                 bName = i[0].capitalize()
+                location = i[1]
+
+            cur.execute(updateStatus)
+            con.commit()
             root.destroy()
-            messagebox.showinfo('Success', f"Book Name - {bName}\nSuccessfully Issued on " + str(issueDate) + " to " + str(issueto).capitalize())
+            messagebox.showinfo('Success', f"The Book '{bName}' is at '{location}'.\nSuccessfully Issued on " + str(issueDate) + " to " + str(issueto).capitalize())
     except:
         messagebox.showinfo("Search Error", "The value entered is wrong, Try again.")
     root.destroy()
