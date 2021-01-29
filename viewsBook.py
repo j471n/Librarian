@@ -47,27 +47,18 @@ connectDB()
 bookTable = "books"
 
 
-
-# def GetBooks(labelFrame, i , y):
-
-#     Label(labelFrame, fg='black', bg='white', width=10, pady=2, text=i[0], font=('Gill Sans MT', 10)).grid(row=y, column=0)
-#     Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[1], font=('Gill Sans MT', 10)).grid(row=y, column=1)
-#     Label(labelFrame, fg='black', bg='white', width=20, pady=2, text=i[2], font=('Gill Sans MT', 10)).grid(row=y, column=2)
-#     Label(labelFrame, bg='black', fg='white', width=20, pady=2, text=i[3], font=('Gill Sans MT', 10)).grid(row=y, column=3)
-#     Label(labelFrame, fg='black', bg='white', width=12, pady=2, text=i[4], font=('Gill Sans MT', 10)).grid(row=y, column=4)
-
 def View():
 
+    
     root = Toplevel()
     root.title("View Details")
     root.minsize(width=400, height=400)
-    root.geometry("900x500")
+    root.geometry("1000x700")
     root.iconbitmap('img/logo.ico')
-
     #Adding Image to Add Book
     global img
     bg = Image.open("img/background/viewsBook.jpg")
-    bg = bg.resize((900, 500), Image.ANTIALIAS)
+    bg = bg.resize((1000, 700), Image.ANTIALIAS)
     img = ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
 
@@ -90,10 +81,10 @@ def View():
 
     # ScrollBar Adding to Treeview
     tree_scroll = Scrollbar(root, orient="vertical", command=detail_tree.yview)
-    tree_scroll.place(relx=0.985, rely=0.3, relheight=0.54, relwidth=0.015)
+    tree_scroll.place(relx=0.988, rely=0.285, relheight=0.56, relwidth=0.012)
     detail_tree.configure(yscrollcommand=tree_scroll.set)
 
-    detail_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status", "Issued Date", "Issued To")
+    detail_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status", "P-Location", "Issued Date", "Issued To")
 
     #Heading List
     detail_tree.heading("#0", text="")
@@ -102,6 +93,7 @@ def View():
     detail_tree.heading("Author", text="Author", anchor=CENTER)
     detail_tree.heading("Publication", text="Publication", anchor=CENTER)
     detail_tree.heading("Status", text="Status", anchor=CENTER)
+    detail_tree.heading("P-Location", text="P-Location", anchor=CENTER)
     detail_tree.heading("Issued Date", text="Issued Date", anchor=CENTER)
     detail_tree.heading("Issued To", text="Issued To", anchor=CENTER)
     # Colums List
@@ -111,6 +103,7 @@ def View():
     detail_tree.column('Author', width=10, anchor=CENTER)
     detail_tree.column('Publication', width=20, anchor=CENTER)
     detail_tree.column('Status', width=10, anchor=CENTER)
+    detail_tree.column('P-Location', width=10, anchor=CENTER)
     detail_tree.column('Issued Date', width=10, anchor=CENTER)
     detail_tree.column('Issued To', width=10, anchor=CENTER)
 
@@ -126,7 +119,7 @@ def View():
               background=[('selected', 'green'), ('active', '#D3D3D3')])
 
     #Fetching data from database
-    getBooks = "SELECT * FROM " + bookTable + ";"
+    getBooks = f"SELECT * FROM {bookTable};"
     count = 0
     try:
         cur.execute(getBooks)
@@ -151,7 +144,8 @@ def View():
                         data[3].capitalize(),
                         data[4].capitalize(),
                         data[5],
-                        data[6].capitalize()
+                        data[6],
+                        data[7].capitalize()
                     )
             )
             count += 1
