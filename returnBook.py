@@ -16,11 +16,12 @@ cur = con.cursor()  #cur -> cursor
 # Enter Table Names here
 issueTable = "books_issued"
 bookTable = "books"
+posTable = "position"
 
 
 def returnn(event=None):
 
-    global SubmitBtn, labelFrame, lb1, bookInfo1, quitBtn, root, Canvas1, status, check, title
+    global SubmitBtn, labelFrame, lb1, bookInfo1, quitBtn, root, Canvas1, status, check, title, pos
 
     bid = bookInfo1.get()
 
@@ -29,8 +30,14 @@ def returnn(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    updateStatus = f"UPDATE {bookTable} SET status = 'avail', issued_date = NULL, issued_to = NULL WHERE book_id = {bid};"
-    checkAvail = f"SELECT status, title FROM {bookTable} WHERE book_id = {bid};"
+    getLocation = f"SELECT location FROM {posTable} WHERE bid = '{bid}';"
+    cur.execute(getLocation)
+    con.commit()
+    for i in cur:
+        pos = i[0]
+
+    updateStatus = f"UPDATE {bookTable} SET status = 'avail', phyLocation = '{pos}', issued_date = NULL, issued_to = NULL WHERE book_id = '{bid}';"
+    checkAvail = f"SELECT status, title FROM {bookTable} WHERE book_id = '{bid}';"
 
 
     try:
@@ -46,7 +53,7 @@ def returnn(event=None):
             cur.execute(updateStatus)
             con.commit()
             root.destroy()
-            messagebox.showinfo('Success', f"Book Name - {title}\nBook Successfully Returned")
+            messagebox.showinfo('Success', f"Book Name - {title}\nBook Successfully Returned. Put the Book at '{pos}'")
             return
 
         elif check == 'avail':
