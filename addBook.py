@@ -9,6 +9,8 @@ import re
 load_dotenv()
 
 
+reservedLocation = []
+
 # Adding book to Database
 def bookRegister(event=None):
 
@@ -30,15 +32,33 @@ def bookRegister(event=None):
         messagebox.showerror("Failed", "Location Field should include '-' or '_' and Numbers (0-9)")
         return
 
-    insertBooks = f"INSERT INTO {bookTable} (book_id, title, author, publication, status, location) VALUES ('{book_id}', '{title}', '{author}', '{publication}','{status}', '{pos}');"
+    insertBooks = f"INSERT INTO {bookTable} (book_id, title, author, publication, status, phylocation) VALUES ('{book_id}', '{title}', '{author}', '{publication}','{status}', '{pos}');"
 
     insertPosition = f"INSERT INTO {posTable} (bid, location) VALUES ('{book_id}', '{pos}');"
+    verify = f"SELECT bid, location FROM {posTable};"
 
     try:
+        cur.execute(verify)
+        con.commit()
+
+        for row in cur:
+            if book_id == row[0]:
+                print("Book Id Already Exist")
+                root.destroy()
+                messagebox.showwarning("Warning", f"Book id ({book_id}) Already Exist.")
+                return
+
+            if pos == row[1]:
+                print("Location is Already Reserved")
+                root.destroy()
+                messagebox.showwarning("Warning", f"Position ({pos}) Already Reserved.")
+                return
+
         cur.execute(insertBooks)
         con.commit()
         cur.execute(insertPosition)
         con.commit()
+
         messagebox.showinfo('Success', f"Book Added Successfully. It should be at {pos} in Pysical Library")
     except:
         messagebox.showinfo("Error", "Can't Add Data Into Database")
