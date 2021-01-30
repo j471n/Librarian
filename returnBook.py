@@ -7,18 +7,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-con = pymysql.connect(host="localhost",
-                      user=getenv('USER'),
-                      password=getenv('DB_PASS'),
-                      database=getenv('DB_NAME'))
+# Connecting to the DB
+con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
 cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
-issueTable = "books_issued"
-bookTable = "books"
-posTable = "position"
+bookTable = getenv('BOOK_TABLE')
+posTable = getenv('POSITION_TABLE')
 
-
+# Getting values and checking that values are correct Printing where to put the book
 def returnn(event=None):
 
     global SubmitBtn, labelFrame, lb1, bookInfo1, quitBtn, root, Canvas1, status, check, title, pos
@@ -36,10 +33,11 @@ def returnn(event=None):
     for i in cur:
         pos = i[0]
 
+    # SQL
     updateStatus = f"UPDATE {bookTable} SET status = 'avail', phyLocation = '{pos}', issued_date = NULL, issued_to = NULL WHERE book_id = '{bid}';"
     checkAvail = f"SELECT status, title FROM {bookTable} WHERE book_id = '{bid}';"
 
-
+    # Executing query and checking isBook issued or not 
     try:
         cur.execute(checkAvail)
         con.commit()
@@ -69,6 +67,7 @@ def returnBook():
 
     global bookInfo1, SubmitBtn, cancelBtn, Canvas1, con, cur, root, labelFrame, lb1
 
+    # Initializing the window
     root = Toplevel()
     root.title("Return Book")
     root.minsize(width=400, height=400)
@@ -82,6 +81,7 @@ def returnBook():
     img = ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
 
+    # Heading Frame and Label
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
     headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
@@ -92,6 +92,7 @@ def returnBook():
                          font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+    # Content Frame
     labelFrame = Frame(root, bg='black')
     labelFrame.place(relx=0.1, rely=0.35, relwidth=0.8, relheight=0.4)
 
@@ -130,6 +131,7 @@ def returnBook():
                        command=returnn)
     SubmitBtn.place(relx=0.28, rely=0.9, relwidth=0.18, relheight=0.08)
 
+    # Cancel Button
     cancelBtn = Button(root,
                      text="Cancel",
                      bg='#f7f1e3',
