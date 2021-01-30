@@ -44,22 +44,22 @@ def executingQuery(query):
 # Search Via BOOK ID
 def searchByBookID():
     bid = searchField.get()
-    query1 = f"SELECT book_id, title, author, status FROM {bookTable} WHERE book_id = '{bid}' ORDER BY status;"
+    query1 = f"SELECT * FROM {bookTable} WHERE book_id = '{bid}' ORDER BY status;"
     return executingQuery(query1)
 
 # Search Via Author
 def searchByAuthor():
     author = searchField.get()
-    query1 = f"SELECT book_id, title, LOWER(author), status FROM {bookTable} WHERE author LIKE '%{author.lower()}%' ORDER BY status;"
+    query1 = f"SELECT * FROM {bookTable} WHERE author LIKE '%{author.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
 # Search Via Title
 def searchByTitle():
     title = searchField.get()
-    query1 = f"SELECT book_id, LOWER(title), author, status FROM {bookTable} WHERE title LIKE '%{title.lower()}%' ORDER BY status;"
+    query1 = f"SELECT * FROM {bookTable} WHERE title LIKE '%{title.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
-# Get the Key from teh Value 
+# Get the Key from teh Value
 def GetKey(val):
     for key, value in radioButton.items():
         if val == value:
@@ -78,7 +78,7 @@ def OnClick():
     start_time = datetime.now()
 
     global selectedOption, resultedList, result_tree, tree_scroll, app
-    
+
     selectedOption = var.get()
 
     # Checking which option is selected
@@ -94,7 +94,7 @@ def OnClick():
     # Initializing the Result Window
     app = Toplevel()
     app.title("Results")
-    app.geometry("500x400")
+    app.geometry("1000x400")
     app.iconbitmap('img/resultIcon.ico')
 
     # Calculating the total time taken by the Search
@@ -108,26 +108,38 @@ def OnClick():
 
     # TREEVIEW in Result Window
     result_tree = TTK.Treeview(app)
-    result_tree['columns'] = ("BID", "Title", "Author","Status")
+    result_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status", "P-Location", "Issued Date", "Issued To")
 
     #Heading List
     result_tree.heading("#0", text="")
     result_tree.heading("BID", text="BID", anchor=CENTER)
     result_tree.heading("Title", text="Title", anchor=CENTER)
     result_tree.heading("Author", text="Author", anchor=CENTER)
+    result_tree.heading("Publication", text="Publication", anchor=CENTER)
     result_tree.heading("Status", text="Status", anchor=CENTER)
-
+    result_tree.heading("P-Location", text="P-Location", anchor=CENTER)
+    result_tree.heading("Issued Date", text="Issued Date", anchor=CENTER)
+    result_tree.heading("Issued To", text="Issued To", anchor=CENTER)
     # Colums List
     result_tree.column('#0', width=0, stretch=NO)
     result_tree.column('BID', width=10, anchor=CENTER)
     result_tree.column('Title', width=20, anchor=CENTER)
     result_tree.column('Author', width=10, anchor=CENTER)
+    result_tree.column('Publication', width=20, anchor=CENTER)
     result_tree.column('Status', width=10, anchor=CENTER)
+    result_tree.column('P-Location', width=10, anchor=CENTER)
+    result_tree.column('Issued Date', width=10, anchor=CENTER)
+    result_tree.column('Issued To', width=10, anchor=CENTER)
 
     count = 0
 
     for data in resultedList:
         print(data)
+        data = list(data)
+
+        for i in range(len(data)):
+            if data[i] == None:
+                data[i] = '-'
 
         # Inserting in the Treeview
         result_tree.insert(parent='', index=END, iid=count, text="",
@@ -136,13 +148,17 @@ def OnClick():
                     data[1].capitalize(),
                     data[2].capitalize(),
                     data[3].capitalize(),
+                    data[4].capitalize(),
+                    data[5],
+                    data[6],
+                    data[7].capitalize()
                 )
         )
         count += 1
 
     result_tree.place(relx=0.01, rely=0.1, relwidth=0.98)
 
-    # Clear the Resulted List 
+    # Clear the Resulted List
     result.clear()
 
     # Issue Button
@@ -160,9 +176,10 @@ def OnClick():
                      bg='white',
                      fg='black',
                      bd=0.5,
-                     command=issueBook)
+                     command=app.destroy)
     quitBtn.place(relx=0.6, rely=0.8,relwidth=0.2, relheight=0.1)
     root.destroy()
+    app.resizable(0,0)
     app.mainloop()
 
 
@@ -211,4 +228,5 @@ def Search():
     root.bind('<Return>', OnClick)
     root.bind_all("<KeyPress>", verify)
 
+    root.resizable(0,0)
     root.mainloop()
