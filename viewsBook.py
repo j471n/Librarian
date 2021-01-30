@@ -74,6 +74,7 @@ def View():
                          font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+    # Select All books from the Library
     getBooks = f"SELECT * FROM {bookTable} ORDER BY status;"
     
     # Creating the Treeview and Scrolling
@@ -86,7 +87,7 @@ def View():
     Books = [value for value in cur]
 
     # Label to Print Total Books
-    Label(root, text=f"Total Books : {Books[0][0]}\nAvailable Book : {Books[0][1]}\nIssued Books : {Books[0][0]-Books[0][1]}",font=('Gill Sans MT', 12), padx=5, anchor=E).place(relx=0.86, rely=0.89)
+    Label(root, text=f"Total Books : {Books[0][0]}\nAvailable : {Books[0][1]}\nIssued : {Books[0][0]-Books[0][1]}",font=('Gill Sans MT', 12), padx=5, anchor=E).place(relx=0.88, rely=0.89)
 
     # Quit Button
     quitBtn = Button(root, text="Quit", bg='#f7f1e3', fg='black', font=('Gill Sans MT', 12), command=root.destroy)
