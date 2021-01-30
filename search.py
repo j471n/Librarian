@@ -156,7 +156,7 @@ def OnClick():
         )
         count += 1
 
-    result_tree.place(relx=0.01, rely=0.1, relwidth=0.98)
+    result_tree.place(relx=0.01, rely=0.1, relwidth=0.98, relheight=0.6)
 
     # Clear the Resulted List
     result.clear()
