@@ -1,5 +1,7 @@
+# Importing Files 
+
 from tkinter import font
-from PIL import ImageTk, Image  #PIL -> Pillow
+from PIL import ImageTk, Image 
 import pymysql
 from addBook import *
 from viewsBook import *
@@ -11,10 +13,10 @@ from dotenv import load_dotenv
 from feedback import feedBack
 from about import aboutUS
 
+# Loading ENV
 load_dotenv()
-# Function form viewsBook.py to connect DB
 
-
+# Initializing Root
 root = Tk()
 root.title("Librarian")
 root.iconbitmap('img/logo.ico')
@@ -29,7 +31,7 @@ bg = bg.resize((600, 500), Image.ANTIALIAS)
 img = ImageTk.PhotoImage(bg)
 Label(root, image=img).pack()
 
-
+# Heading Frame for Heading
 headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
 headingFrame1.place(relx=0.2, rely=0.05, relwidth=0.6, relheight=0.16)
 headingLabel = Label(headingFrame1,
@@ -49,7 +51,7 @@ img5 = PhotoImage(file="img/buttons/return.png")
 img6 = PhotoImage(file="img/buttons/f-icon.png")
 img7 = PhotoImage(file="img/buttons/info-icon.png")
 
-# Resizing image to fit on button
+# Initializing the buttons and placing them
 
 btn1 = Button(root,text="", bg='black', fg='white', image=img1, border=0.5, compound=LEFT, padx=40, font=('Gill Sans MT', 12), anchor=CENTER, command=addBook)
 btn1.place(relx=0.28,rely=0.35, relwidth=0.45,relheight=0.1)
@@ -75,6 +77,6 @@ btn7.place(relx=0.03, rely=0.77, relwidth=0.1, relheight=0.1)
 
 Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
 
-
+# Restric t resizing
 root.resizable(0,0)
 root.mainloop()
