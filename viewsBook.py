@@ -8,24 +8,23 @@ from tkinter import ttk
 
 load_dotenv()
 
+# Function to connect if database does not exist
 def connectDB():
     try:
         global con, cur
-        con = pymysql.connect(host="localhost",
-                            user=getenv('USER'),
-                            password=getenv('DB_PASS'),
-                            database=getenv('DB_NAME'))
+        # Connecting to the Database
+        con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
         cur = con.cursor()  #cur -> cursor
         print("Database Connected, Already Existed.")
 
     except:
+
+        # SQL
         q1 = f"CREATE DATABASE {getenv('DB_NAME')};"
         q2 = f"use {getenv('DB_NAME')};"
         q3 = 'CREATE TABLE books (book_id VARCHAR(200) PRIMARY KEY, title VARCHAR(50), author VARCHAR(30),publication VARCHAR(100), status VARCHAR(30), phyLocation VARCHAR(50), issued_date VARCHAR(15), issued_to VARCHAR(25));'
         q4 = "CREATE TABLE position (bid VARCHAR(200) PRIMARY KEY, location VARCHAR(50));"
-        con = pymysql.connect(host="localhost",
-                              user=getenv('USER'),
-                              password=getenv('DB_PASS'))
+        con = pymysql.connect(host = getenv('HOST'), user = getenv('USER'), password = getenv('DB_PASS'))
         cur = con.cursor()
 
         cur.execute(q1)
@@ -37,17 +36,15 @@ def connectDB():
         cur.execute(q4)
         con.commit()
 
-        con = pymysql.connect(host="localhost",
-                              user=getenv('USER'),
-                              password=getenv('DB_PASS'),
-                              database=getenv('DB_NAME'))
+    # Connecting to the Database
+        con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
         cur = con.cursor()
         print("Database Connected, New Created")
 
 
 connectDB()
 # Enter Table Names here
-bookTable = "books"
+bookTable = getenv('BOOK_TABLE')
 
 
 def View():
@@ -138,7 +135,7 @@ def View():
                 if data[i] == None:
                     data[i] = '-'
 
-
+            # Inserting in the Treeview
             detail_tree.insert(parent='', index=END, iid=count, text="",
                     values=(
                         data[0],
