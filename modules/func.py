@@ -4,6 +4,7 @@ from tkinter import messagebox
 from os import getenv
 import pymysql
 from dotenv import load_dotenv
+import re
 
 
 load_dotenv()
@@ -98,3 +99,14 @@ def createTable(dir,height=0.5, width=1, marginX=0.1, marginY=0.1, loopThrough=c
         detail_tree.place(relx=marginX, rely=marginY, relwidth=width, relheight=height)
     except:
         messagebox.showinfo("Failed to fetch files from database")
+
+# To Verify Position
+def positionVerification(div, position):
+    # Checking that Position of the Bok Should inclue -, _, and Digits
+    if not any(re.findall(r'-|_|/|\d', position, re.IGNORECASE)) or not re.sub(
+            '[^\d.,]', '', position):
+        div.destroy()
+        messagebox.showerror(
+            "Failed",
+            "Location Field should include '-' or '_' and Numbers (0-9)")
+        return
