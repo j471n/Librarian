@@ -9,8 +9,6 @@ import re
 load_dotenv()
 
 
-reservedLocation = []
-
 # Adding book to Database
 def bookRegister(event=None):
 
@@ -21,7 +19,8 @@ def bookRegister(event=None):
     status = bookInfo5.lower()
     pos = bookInfo6.get()
 
-    if status != "avail" or book_id == "" or author == "" or title == "" or publication == "":
+    # Checking that Every field should contain values
+    if status != "available" or book_id == "" or author == "" or title == "" or publication == "":
         root.destroy()
         messagebox.showerror("Failed", "All Fields are Required.")
         return
@@ -32,11 +31,12 @@ def bookRegister(event=None):
         messagebox.showerror("Failed", "Location Field should include '-' or '_' and Numbers (0-9)")
         return
 
+    # SQL Queries
     insertBooks = f"INSERT INTO {bookTable} (book_id, title, author, publication, status, phylocation) VALUES ('{book_id}', '{title}', '{author}', '{publication}','{status}', '{pos}');"
-
     insertPosition = f"INSERT INTO {posTable} (bid, location) VALUES ('{book_id}', '{pos}');"
     verify = f"SELECT bid, location FROM {posTable};"
 
+    # Executing Queries and checking that bookID and Location is Already in the DB or not
     try:
         cur.execute(verify)
         con.commit()
@@ -78,12 +78,14 @@ def addBook():
 
     global bookInfo1, bookInfo2, bookInfo3, bookInfo4,bookInfo5, bookInfo6, con, cur, bookTable, posTable, root
 
+    # Initializing the Window
     root = Toplevel()
     root.title("Add Book")
     root.minsize(width=400, height=400)
     root.geometry("600x500")
     root.iconbitmap('img/logo.ico')
 
+    # Connecting the Database
     con = pymysql.connect(host="localhost", user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
     cur = con.cursor()  #cur -> cursor
 
@@ -94,8 +96,9 @@ def addBook():
     img = ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
 
-    bookTable = "books"  # Book Table
-    posTable = 'position' # Position Table
+    # Tables Name
+    bookTable = getenv('BOOK_TABLE')
+    posTable = getenv('POSITION_TABLE') 
 
     # A container
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
@@ -158,7 +161,7 @@ def addBook():
     bookInfo4.place(relx=0.35, rely=0.60, relwidth=0.52, relheight=0.08)
 
     # Book Status
-    bookInfo5 = 'Avail'
+    bookInfo5 = 'Available'
 
     # Position of the Book
     lb6 = Label(labelFrame,
