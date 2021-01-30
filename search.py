@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import tkinter.ttk as TTK
 from datetime import datetime
 from issueBook import issueBook
-
+import modules.func as Function
 
 load_dotenv()
 
@@ -103,60 +103,11 @@ def OnClick():
 
     # Display the Result Bar
     resultText = f"{len(resultedList)} results found in {duration[5:10]} of {GetKey(selectedOption)} - {searchField.get()}"
-    resultLabel = Label(app, text=resultText)
+    resultLabel = Label(app, text=resultText, font = ('Gill Sans MT', 13))
     resultLabel.grid(row=0, column=0, pady=10, ipadx=10)
 
-    # TREEVIEW in Result Window
-    result_tree = TTK.Treeview(app)
-    result_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status", "P-Location", "Issued Date", "Issued To")
-
-    #Heading List
-    result_tree.heading("#0", text="")
-    result_tree.heading("BID", text="BID", anchor=CENTER)
-    result_tree.heading("Title", text="Title", anchor=CENTER)
-    result_tree.heading("Author", text="Author", anchor=CENTER)
-    result_tree.heading("Publication", text="Publication", anchor=CENTER)
-    result_tree.heading("Status", text="Status", anchor=CENTER)
-    result_tree.heading("P-Location", text="P-Location", anchor=CENTER)
-    result_tree.heading("Issued Date", text="Issued Date", anchor=CENTER)
-    result_tree.heading("Issued To", text="Issued To", anchor=CENTER)
-    # Colums List
-    result_tree.column('#0', width=0, stretch=NO)
-    result_tree.column('BID', width=10, anchor=CENTER)
-    result_tree.column('Title', width=20, anchor=CENTER)
-    result_tree.column('Author', width=10, anchor=CENTER)
-    result_tree.column('Publication', width=20, anchor=CENTER)
-    result_tree.column('Status', width=10, anchor=CENTER)
-    result_tree.column('P-Location', width=10, anchor=CENTER)
-    result_tree.column('Issued Date', width=10, anchor=CENTER)
-    result_tree.column('Issued To', width=10, anchor=CENTER)
-
-    count = 0
-
-    for data in resultedList:
-        print(data)
-        data = list(data)
-
-        for i in range(len(data)):
-            if data[i] == None:
-                data[i] = '-'
-
-        # Inserting in the Treeview
-        result_tree.insert(parent='', index=END, iid=count, text="",
-                values=(
-                    data[0],
-                    data[1].capitalize(),
-                    data[2].capitalize(),
-                    data[3].capitalize(),
-                    data[4].capitalize(),
-                    data[5],
-                    data[6],
-                    data[7].capitalize()
-                )
-        )
-        count += 1
-
-    result_tree.place(relx=0.01, rely=0.1, relwidth=0.98, relheight=0.6)
+    # Creating Tree View and Looping through the Result
+    Function.createTable(dir=app, height=0.6, width=0.98, marginX=0.01, marginY=0.15, loopThrough=resultedList)
 
     # Clear the Resulted List
     result.clear()

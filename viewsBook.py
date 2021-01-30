@@ -1,10 +1,11 @@
 from tkinter import *
-from PIL import ImageTk, Image
+import PIL
 from tkinter import messagebox
 import pymysql
 from os import getenv
 from dotenv import load_dotenv
 from tkinter import ttk
+import modules.func as Function
 
 load_dotenv()
 
@@ -36,7 +37,7 @@ def connectDB():
         cur.execute(q4)
         con.commit()
 
-    # Connecting to the Database
+        # Connecting to the Database
         con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
         cur = con.cursor()
         print("Database Connected, New Created")
@@ -57,9 +58,9 @@ def View():
     root.iconbitmap('img/logo.ico')
     #Adding Image to Add Book
     global img
-    bg = Image.open("img/background/viewsBook.jpg")
-    bg = bg.resize((1000, 700), Image.ANTIALIAS)
-    img = ImageTk.PhotoImage(bg)
+    bg = PIL.Image.open("img/background/viewsBook.jpg")
+    bg = bg.resize((1000, 700), PIL.Image.ANTIALIAS)
+    img = PIL.ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
 
     # Heading Frame - Container
@@ -73,87 +74,10 @@ def View():
                          font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-
-
-    # TREEVIEW in View Window
-    detail_tree = ttk.Treeview(root)
-    detail_tree.pack()
-
-    # ScrollBar Adding to Treeview
-    tree_scroll = Scrollbar(root, orient="vertical", command=detail_tree.yview)
-    tree_scroll.place(relx=0.988, rely=0.285, relheight=0.56, relwidth=0.012)
-    detail_tree.configure(yscrollcommand=tree_scroll.set)
-
-    detail_tree['columns'] = ("BID", "Title", "Author", "Publication", "Status", "P-Location", "Issued Date", "Issued To")
-
-    #Heading List
-    detail_tree.heading("#0", text="")
-    detail_tree.heading("BID", text="BID", anchor=CENTER)
-    detail_tree.heading("Title", text="Title", anchor=CENTER)
-    detail_tree.heading("Author", text="Author", anchor=CENTER)
-    detail_tree.heading("Publication", text="Publication", anchor=CENTER)
-    detail_tree.heading("Status", text="Status", anchor=CENTER)
-    detail_tree.heading("P-Location", text="P-Location", anchor=CENTER)
-    detail_tree.heading("Issued Date", text="Issued Date", anchor=CENTER)
-    detail_tree.heading("Issued To", text="Issued To", anchor=CENTER)
-    # Colums List
-    detail_tree.column('#0', width=0, stretch=NO)
-    detail_tree.column('BID', width=10, anchor=CENTER)
-    detail_tree.column('Title', width=20, anchor=CENTER)
-    detail_tree.column('Author', width=10, anchor=CENTER)
-    detail_tree.column('Publication', width=20, anchor=CENTER)
-    detail_tree.column('Status', width=10, anchor=CENTER)
-    detail_tree.column('P-Location', width=10, anchor=CENTER)
-    detail_tree.column('Issued Date', width=10, anchor=CENTER)
-    detail_tree.column('Issued To', width=10, anchor=CENTER)
-
-    # Styling Treeview
-    style = ttk.Style()
-    style.configure("Treeview",
-                    background='#d3d3d3',
-                    foreground="black",
-                    rowheight=30,
-                    font=('Arial', 9))
-
-    style.map("Treeview",
-              background=[('selected', 'green'), ('active', '#D3D3D3')])
-
-    #Fetching data from database
     getBooks = f"SELECT * FROM {bookTable} ORDER BY status;"
-    count = 0
-    try:
-        cur.execute(getBooks)
-        con.commit()
-
-        # Adding Data to the Treeview Table
-        for data in cur:
-            data = list(data)
-            # print(data)
-
-            # Checking if the column is None then change the value to -
-            for i in range(len(data)):
-                if data[i] == None:
-                    data[i] = '-'
-
-            # Inserting in the Treeview
-            detail_tree.insert(parent='', index=END, iid=count, text="",
-                    values=(
-                        data[0],
-                        data[1].capitalize(),
-                        data[2].capitalize(),
-                        data[3].capitalize(),
-                        data[4].capitalize(),
-                        data[5],
-                        data[6],
-                        data[7].capitalize()
-                    )
-            )
-            count += 1
-
-        detail_tree.place(relx=0, rely=0.25, relwidth=1, relheight=0.6)
-    except:
-        messagebox.showinfo("Failed to fetch files from database")
-
+    
+    # Creating the Treeview and Scrolling
+    Function.createTable(dir=root, height=0.6,width=1, marginX=0., marginY=0.25, query=getBooks, scroll="yes", sMarginX=0.988, sMarginY=0.285, sheight=0.56, swidth=0.012)
 
     # Total Books Query
     length = f"SELECT COUNT(*), (SELECT COUNT(*) FROM books WHERE status = 'available') AS Avail FROM books;"
