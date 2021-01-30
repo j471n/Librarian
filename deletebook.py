@@ -7,31 +7,28 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-con = pymysql.connect(host="localhost",
-                      user=getenv('USER'),
-                      password=getenv('DB_PASS'),
-                      database=getenv('DB_NAME'))
+# Connecting to the Database
+con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
 cur = con.cursor()  #cur -> cursor
 
-# Enter Table Names here
-bookTable = "books"
-posTable = "position"
+# Table Name and Minimum Length
+bookTable = getenv('BOOK_TABLE')
+posTable = getenv('POSITION_TABLE') 
 MIN_LENGTH = 15
 
 # To Check the Length of the Reason
 def checkWords(self):
-    global counter, lenght
+    global counter, lenght, reason
 
     reason = bookInfo2.get('1.0', END).strip()
     lenght = len(list(reason.split(" "))) - 1
     if lenght <= MIN_LENGTH:
         counter.config(text=MIN_LENGTH-lenght)
 
-
+# Get the Fields value and  Checking that Every thing has a value and Check reason is of enough length
 def deleteBook(event=None):
 
     bid = bookInfo1.get()
-    reason = bookInfo2.get('1.0', END)
     print("Reason : ", reason)
     print("bid : ", bid)
 
@@ -44,12 +41,14 @@ def deleteBook(event=None):
         messagebox.showerror('Failed', f"Lenght of the Reason Field must be {MIN_LENGTH}")
         return
 
+    # SQL
     deleteSql = f"DELETE FROM {bookTable} WHERE book_id = '{bid}';"
     deletePosition = f"DELETE FROM {posTable} WHERE bid = '{bid}';"
     book_name = f"SELECT title FROM {bookTable} WHERE book_id = '{bid}';"
 
     global BookName
 
+    # Executing the Queries
     try:
         cur.execute(book_name)
         con.commit()
@@ -72,6 +71,7 @@ def delete():
 
     global bookInfo1, bookInfo2, Canvas1, con, cur, root, counter
 
+    #Initializing the Window
     root = Toplevel()
     root.title("Delete Book")
     root.minsize(width=400, height=400)
@@ -85,6 +85,7 @@ def delete():
     img = ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
 
+    # Heading Frame and Label
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
     headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
@@ -95,6 +96,7 @@ def delete():
                          font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+    # Content/Label Frame
     labelFrame = Frame(root, bg='black')
     labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.5)
 
@@ -109,6 +111,7 @@ def delete():
     bookInfo1 = Entry(labelFrame)
     bookInfo1.place(relx=0.3, rely=0.125, relwidth=0.52)
 
+    # Reason Should be 15 length
     lb2 = Label(labelFrame,
                 text="Reason : ",
                 bg='black',
@@ -140,6 +143,7 @@ def delete():
                        command=deleteBook)
     SubmitBtn.place(relx=0.28, rely=0.9, relwidth=0.18, relheight=0.08)
 
+    # Cancel Button
     cancelBtn = Button(root,
                      text="Cancel",
                      bg='#f7f1e3',
@@ -150,6 +154,5 @@ def delete():
 
     # Running SendEmail on Enter
     root.bind_all("<KeyPress>", checkWords)
-    # root.bind('<Return>', deleteBook)
     root.resizable(0, 0)
     root.mainloop()
