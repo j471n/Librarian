@@ -119,7 +119,7 @@ def View():
               background=[('selected', 'green'), ('active', '#D3D3D3')])
 
     #Fetching data from database
-    getBooks = f"SELECT * FROM {bookTable};"
+    getBooks = f"SELECT * FROM {bookTable} ORDER BY status;"
     count = 0
     try:
         cur.execute(getBooks)
@@ -128,7 +128,7 @@ def View():
         # Adding Data to the Treeview Table
         for data in cur:
             data = list(data)
-            print(data)
+            # print(data)
 
             # Checking if the column is None then change the value to -
             for i in range(len(data)):
@@ -154,6 +154,15 @@ def View():
     except:
         messagebox.showinfo("Failed to fetch files from database")
 
+
+    # Total Books Query
+    length = f"SELECT COUNT(*), (SELECT COUNT(*) FROM books WHERE status = 'available') AS Avail FROM books;"
+    cur.execute(length)
+    con.commit()
+    Books = [value for value in cur]
+
+    # Label to Print Total Books
+    Label(root, text=f"Total Books : {Books[0][0]}\nAvailable Book : {Books[0][1]}\nIssued Books : {Books[0][0]-Books[0][1]}",font=('Gill Sans MT', 12), padx=5, anchor=E).place(relx=0.86, rely=0.89)
 
     # Quit Button
     quitBtn = Button(root, text="Quit", bg='#f7f1e3', fg='black', font=('Gill Sans MT', 12), command=root.destroy)
