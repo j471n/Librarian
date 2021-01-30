@@ -1,17 +1,18 @@
-# Importing Files 
+# Importing Files
 
-from tkinter import font
-from PIL import ImageTk, Image 
+from tkinter import *
+from PIL import ImageTk, Image
 import pymysql
 from addBook import *
 from viewsBook import *
 from deletebook import *
 from issueBook import *
 from returnBook import *
-from os import getenv
+from os import getenv, set_inheritable
 from dotenv import load_dotenv
 from feedback import feedBack
 from about import aboutUS
+from search import Search
 
 # Loading ENV
 load_dotenv()
@@ -41,6 +42,27 @@ headingLabel = Label(headingFrame1,
                      font=('Great Vibes', 28))
 headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+# Function to put the Buttons on the Screen
+def putButtons(set, X_Axis, Y_Axis, sign, width, height):
+    
+    for _img, fun in set.items():
+
+        btn = Button(root,
+                    text="",
+                    bg='black',
+                    fg='white',
+                    image=_img,
+                    border=0.5,
+                    font=('Gill Sans MT', 12),
+                    anchor=CENTER,
+                    command=fun)
+        btn.place(relx=X_Axis, rely=Y_Axis, relwidth=width, relheight=height)
+
+        if sign == "+":
+            Y_Axis += 0.1
+        elif sign == "-":
+            Y_Axis -= 0.1
+
 
 # Creating a photoimage object to use image
 img1 = PhotoImage(file="img/buttons/add.png")
@@ -50,30 +72,28 @@ img4 = PhotoImage(file="img/buttons/issue.png")
 img5 = PhotoImage(file="img/buttons/return.png")
 img6 = PhotoImage(file="img/buttons/f-icon.png")
 img7 = PhotoImage(file="img/buttons/info-icon.png")
+img8 = PhotoImage(file="img/buttons/search.png")
 
 # Initializing the buttons and placing them
+buttons = {
+    img1: addBook,
+    img2: delete,
+    img3: View,
+    img4: issueBook,
+    img5: returnBook
+}
 
-btn1 = Button(root,text="", bg='black', fg='white', image=img1, border=0.5, compound=LEFT, padx=40, font=('Gill Sans MT', 12), anchor=CENTER, command=addBook)
-btn1.place(relx=0.28,rely=0.35, relwidth=0.45,relheight=0.1)
+putButtons(buttons, 0.28, 0.35, "+", 0.45, 0.1)
 
-btn2 = Button(root,text="",bg='black', fg='white', image=img2, border=0.5,compound=LEFT, padx=25, font=('Gill Sans MT', 12),anchor=CENTER, command=delete)
-btn2.place(relx=0.28,rely=0.45, relwidth=0.45,relheight=0.1)
+sideButtons = {
 
-btn3 = Button(root,text="",bg='black', fg='white', image=img3, border=0.5,compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER,command=View)
-btn3.place(relx=0.28,rely=0.55, relwidth=0.45,relheight=0.1)
+    img6 : feedBack,
+    img7 : aboutUS,
+    img8 : Search
 
-btn4 = Button(root,text="",bg='black', fg='white', image=img4, border=0.5,compound=LEFT, padx=40, font=('Gill Sans MT', 12), anchor=CENTER,command=issueBook)
-btn4.place(relx=0.28,rely=0.65, relwidth=0.45,relheight=0.1)
+}
 
-btn5 = Button(root,text="",bg='black', fg='white', image=img5, border=0.5,compound=LEFT, padx=25, font=('Gill Sans MT', 12),anchor=CENTER, command=returnBook)
-btn5.place(relx=0.28,rely=0.75, relwidth=0.45,relheight=0.1)
-
-btn6 = Button(root, text="", bg='black', border = 0.8, image=img6, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER, command=feedBack)
-btn6.place(relx=0.03, rely=0.87, relwidth=0.1, relheight=0.1)
-
-btn7 = Button(root, text="", bg='black', border = 0.8, image=img7, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER, command=aboutUS)
-btn7.place(relx=0.03, rely=0.77, relwidth=0.1, relheight=0.1)
-
+putButtons(sideButtons, 0.03, 0.87, "-", 0.1, 0.1)
 
 Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
 
