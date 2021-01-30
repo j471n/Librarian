@@ -9,18 +9,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
-con = pymysql.connect(host="localhost",
-                      user=getenv('USER'),
-                      password=getenv('DB_PASS'),
-                      database=getenv('DB_NAME'))
+# Connecting to DB
+con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
 cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
-bookTable = "books"
-issueTable = "books_issued"
+bookTable = getenv('BOOK_TABLE')
 
-
+# Getting values and checking that every field should have value
 def issue(event=None):
 
     global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date,location, issuedName
@@ -34,11 +30,13 @@ def issue(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
+    # SQL
     updateStatus = f"UPDATE {bookTable} SET status = 'issued', phyLocation = NULL, issued_date = '{issueDate}', issued_to = '{issueto}' WHERE book_id = '{bid}';"
     issueDateAndName = f"SELECT issued_date, issued_to FROM {bookTable} WHERE book_id = '{bid}';"
     getBookDetails = f"SELECT title, phyLocation FROM {bookTable} WHERE book_id = '{bid}';"
     checkAvail = f"SELECT status FROM {bookTable} WHERE book_id = '{bid}';"
 
+    # Executing Queries and checking for book status if already issued and fetching the details of the student
     try:
         cur.execute(checkAvail)
         con.commit()
@@ -51,6 +49,7 @@ def issue(event=None):
             cur.execute(issueDateAndName)
             con.commit()
 
+            # Fetching the Issue Date and the Student name
             for i in cur:
                 Date = i[0]
                 issuedName = i[1]
@@ -63,6 +62,7 @@ def issue(event=None):
 
             bName = ""
 
+            # Fetching the Bookname and the Location in Physical
             for i in cur:
                 bName = i[0].capitalize()
                 location = i[1]
@@ -82,6 +82,7 @@ def issueBook():
 
     global issueBtn, labelFrame, lb1, inf1, inf2,inf3, cancelBtn, root, Canvas1, status
 
+    # Initializing the window
     root = Toplevel()
     root.title("Issue Book")
     root.minsize(width=400, height=400)
@@ -94,6 +95,8 @@ def issueBook():
     bg = bg.resize((600, 500), Image.ANTIALIAS)
     img = ImageTk.PhotoImage(bg)
     Label(root, image=img).pack()
+
+    # Heading frame and Lable
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
     headingFrame1.place(relx=0.25, rely=0.05, relwidth=0.5, relheight=0.13)
 
@@ -104,6 +107,7 @@ def issueBook():
                          font=('Great Vibes', 28))
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
+    # Content Frame
     labelFrame = Frame(root, bg='black')
     labelFrame.place(relx=0.1, rely=0.3, relwidth=0.8, relheight=0.4)
 
