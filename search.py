@@ -195,7 +195,7 @@ def Search():
     for (text, value) in radioButton.items():
 
         Rbutton = TTK.Radiobutton(root, text = text, variable = var, value = value)
-        Rbutton.grid(row=1, column=y, columnspan=2, padx=20,ipadx=30)
+        Rbutton.grid(row=1, column=col, columnspan=2, padx=20,ipadx=30)
         col += 1
 
     # Search Field
