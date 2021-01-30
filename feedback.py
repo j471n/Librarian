@@ -87,27 +87,26 @@ def feedBack():
     password.grid(row=4, column=0, columnspan=4, padx=7, pady=5, ipadx=50)
 
     l3 = Label(leftFrame,text= "Enter Feedback").grid(row=5, column=0, columnspan=4, pady=2)
-    msg = Text(leftFrame, width=33, borderwidth=1, height=10, padx=9, pady=10)
+    msg = Text(leftFrame, width=33, borderwidth=1, height=9, padx=9, pady=10, font=('Gill Sans MT', 10))
     msg.grid(row=6, column=0, columnspan=4, padx=7, pady=5)
 
     # Submit Button for Feedback Form
     global b
     img1= ImageTk.PhotoImage(Image.open("img/buttons/submit.png"))
-    b = Button(leftFrame,image=img1, text='efddf', state=DISABLED, command=sendEmail, border=0)
+    b = Button(leftFrame,image=img1, text='efddf', state=DISABLED, command=sendEmail, border=0, cursor='hand2')
     b.grid(row=7, column=1, columnspan=2, pady=10, ipady=2)
 
 
     # Labels for Right Frames
 
     rightLabel1 = Label(root,
-                        text="!!! WARNING",
+                        text="!!! WARNING !!!",
                         foreground='red',
                         font=('Gill Sans MT', 18),
-                        # background='black',
                         padx=10,
                         pady=10,
                         justify='center')
-    rightLabel1.place(relx=0.62, rely=0)
+    rightLabel1.place(relx=0.59, rely=0)
 
     t1 = "We Don't Store Your Password anywhere. We take that and send it to the mail Server for Providing us Feedback. This Process is Totally Secure You Don't need to Worry"
     rightLabel2 = Label(root,
@@ -134,6 +133,7 @@ def feedBack():
                         wraplength=275)
     rightLabel3.place(relx=0.52, rely=0.5)
 
+    # Less secure apps link
     rightLabel4 = Label(root,
                 text="Click Here",
                 bg='#339900',
@@ -146,7 +146,7 @@ def feedBack():
 
     # About Us Button
     img2 = ImageTk.PhotoImage(Image.open("img/buttons/about.png"))
-    aboutbutton = Button(root,image=img2, text='', command=aboutUS, padx=10, border=0)
+    aboutbutton = Button(root,image=img2, text='', command=aboutUS, padx=10, border=0, cursor='hand2')
     aboutbutton.place(relx=0.63, rely=0.83, bordermode=None)
 
 
