@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from feedback import feedBack
 from about import aboutUS
 from search import Search
+from shelvesUpdation import UpdateShelves
 
 # Loading ENV
 load_dotenv()
@@ -54,6 +55,7 @@ def putButtons(set, X_Axis, Y_Axis, sign, width, height):
                     image=_img,
                     border=0.5,
                     font=('Gill Sans MT', 12),
+                    cursor='hand2',
                     anchor=CENTER,
                     command=fun)
         btn.place(relx=X_Axis, rely=Y_Axis, relwidth=width, relheight=height)
@@ -73,6 +75,7 @@ img5 = PhotoImage(file="img/buttons/return.png")
 img6 = PhotoImage(file="img/buttons/f-icon.png")
 img7 = PhotoImage(file="img/buttons/info-icon.png")
 img8 = PhotoImage(file="img/buttons/search.png")
+img9 = PhotoImage(file="img/buttons/updateBtn.png")
 
 # Initializing the buttons and placing them
 buttons = {
@@ -89,7 +92,8 @@ sideButtons = {
 
     img6 : feedBack,
     img7 : aboutUS,
-    img8 : Search
+    img8 : Search,
+    img9 : UpdateShelves
 
 }
 
