@@ -1,0 +1,5 @@
+quick_mailer==0.1.0
+PyMySQL==0.10.1
+mailer==0.8.1
+Pillow==8.1.0
+python-dotenv==0.15.0
