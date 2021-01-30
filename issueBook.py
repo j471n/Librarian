@@ -56,7 +56,7 @@ def issue(event=None):
             root.destroy()
             messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  str(issuedName).capitalize())
             return
-        elif check == 'avail':
+        elif check == 'available':
             cur.execute(getBookDetails)
             con.commit()
 
