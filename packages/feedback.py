@@ -8,7 +8,8 @@ import re
 from dotenv import load_dotenv
 import webbrowser
 from PIL import ImageTk, Image  #PIL -> Pillow
-from about import aboutUS
+from .about import aboutUS
+# from about import *
 
 load_dotenv()
 

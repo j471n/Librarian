@@ -4,7 +4,7 @@ from os import getenv
 from dotenv import load_dotenv
 import tkinter.ttk as TTK
 from datetime import datetime
-from issueBook import issueBook
+from .issueBook import issueBook
 import modules.func as Function
 
 load_dotenv()
