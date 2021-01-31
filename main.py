@@ -3,17 +3,17 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import pymysql
-from addBook import *
-from viewsBook import *
-from deletebook import *
-from issueBook import *
-from returnBook import *
-from os import getenv, set_inheritable
+from packages.addBook import *
+from packages.viewsBook import *
+from packages.deletebook import *
+from packages.issueBook import *
+from packages.returnBook import *
+from os import getenv
 from dotenv import load_dotenv
-from feedback import feedBack
-from about import aboutUS
-from search import Search
-from shelvesUpdation import UpdateShelves
+from packages.feedback import feedBack
+from packages.about import aboutUS
+from packages.search import Search
+from packages.shelvesUpdation import UpdateShelves
 
 # Loading ENV
 load_dotenv()
