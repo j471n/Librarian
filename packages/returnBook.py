@@ -34,7 +34,7 @@ def returnn(event=None):
         pos = i[0]
 
     # SQL
-    updateStatus = f"UPDATE {bookTable} SET status = 'avail', phyLocation = '{pos}', issued_date = NULL, issued_to = NULL WHERE book_id = '{bid}';"
+    updateStatus = f"UPDATE {bookTable} SET status = 'available', phyLocation = '{pos}', issued_date = NULL, issued_to = NULL WHERE book_id = '{bid}';"
     checkAvail = f"SELECT status, title FROM {bookTable} WHERE book_id = '{bid}';"
 
     # Executing query and checking isBook issued or not 
@@ -54,7 +54,7 @@ def returnn(event=None):
             messagebox.showinfo('Success', f"Book Name - {title}\nBook Successfully Returned. Put the Book at '{pos}'")
             return
 
-        elif check == 'avail':
+        elif check == 'available':
             root.destroy()
             messagebox.showwarning('Warning', "The Book has not been Issued Yet.")
             return
