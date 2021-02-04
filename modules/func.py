@@ -141,3 +141,21 @@ def putButtons(window, set, X_Axis, Y_Axis, sign, width, height, bd=0, direction
                 X_Axis += 0.1
             elif sign == "-":
                 X_Axis -= 0.1
+
+
+# Checking BookID is correct or not Implemented in DeleteBook, IssuedBook, Return Book
+def bookIdChecker(bid):
+    checklist = []
+
+    c = f"SELECT book_id FROM {bookTable};"
+    cur.execute(c)
+    con.commit()
+
+    for i in cur:
+        checklist.append(i)
+
+    t = (bid, )
+
+    if t not in checklist:
+        messagebox.showinfo('Failed', "You've Entered the Wrong Book ID.")
+        return 1
