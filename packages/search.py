@@ -4,8 +4,19 @@ from os import getenv
 from dotenv import load_dotenv
 import tkinter.ttk as TTK
 from datetime import datetime
-from .issueBook import issueBook
 import modules.func as Function
+from PIL import *
+from tkinter import messagebox
+
+
+# importing every file
+from .addBook import addBook
+from .deletebook import delete
+from .viewsBook import View
+from .issueBook import issueBook
+from .returnBook import returnBook
+from .shelvesUpdation import UpdateShelves
+from .feedback import feedBack
 
 load_dotenv()
 
@@ -19,6 +30,29 @@ bookTable = getenv('BOOK_TABLE')
 # Search Result List
 result = []
 
+
+
+def putButtons(set, X_Axis, Y_Axis, sign, width, height):
+    
+    for _img, fun in set.items():
+
+        btn = Button(app,
+                    text="",
+                    # bg='black',
+                    # fg='white',
+                    image=_img,
+                    border=0,
+                    # font=('Gill Sans MT', 12),
+                    cursor='hand2',
+                    anchor=CENTER,
+                    command=fun)
+        btn.place(relx=X_Axis, rely=Y_Axis, relwidth=width, relheight=height)
+
+        if sign == "+":
+            X_Axis += 0.1
+        elif sign == "-":
+            X_Axis -= 0.1
+
 # Verify that search Field is empty or not
 def verify(self):
     try:
@@ -31,32 +65,53 @@ def verify(self):
 
 # Search Query Execution and Returning the Result
 def executingQuery(query):
-    cur.execute(query)
-    con.commit()
+    try:
+        cur.execute(query)
+        con.commit()
 
-    for row in cur:
-        result.append(row)
+        for row in cur:
+            result.append(row)
 
-    print(result)
-    return result
+        return result
+
+    except:
+        print("Something went Wrong")
+        root.destroy()
+        messagebox.showerror("Failed", "Something went wrong try again.")
+        return
 
 
 # Search Via BOOK ID
 def searchByBookID():
-    bid = searchField.get()
-    query1 = f"SELECT * FROM {bookTable} WHERE book_id = '{bid}' ORDER BY status;"
+    query1 = f"SELECT * FROM {bookTable} WHERE book_id = '{inputField}' ORDER BY status;"
     return executingQuery(query1)
 
 # Search Via Author
 def searchByAuthor():
-    author = searchField.get()
-    query1 = f"SELECT * FROM {bookTable} WHERE author LIKE '%{author.lower()}%' ORDER BY status;"
+    query1 = f"SELECT * FROM {bookTable} WHERE author LIKE '%{inputField.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
 # Search Via Title
 def searchByTitle():
-    title = searchField.get()
-    query1 = f"SELECT * FROM {bookTable} WHERE title LIKE '%{title.lower()}%' ORDER BY status;"
+    query1 = f"SELECT * FROM {bookTable} WHERE title LIKE '%{inputField.lower()}%' ORDER BY status;"
+    return executingQuery(query1)
+
+
+# Search By Position
+def searchByPosition():
+    query1 = f"SELECT * FROM {bookTable} WHERE phyLocation LIKE '%{inputField.lower()}%' ORDER BY status;"
+    return executingQuery(query1)
+
+# Search By Date
+def searchByDate():
+
+    query1 = f"SELECT * FROM {bookTable} WHERE issued_date LIKE '%{inputField.lower()}%' ORDER BY status;"
+    return executingQuery(query1)
+
+# Search By Student Name
+def searchByStudent():
+
+    query1 = f"SELECT * FROM {bookTable} WHERE issued_to LIKE '%{inputField.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
 # Get the Key from teh Value
@@ -77,9 +132,11 @@ def OnClick():
     # Process Start Time
     start_time = datetime.now()
 
-    global selectedOption, resultedList, result_tree, tree_scroll, app
+    global selectedOption, resultedList, result_tree, tree_scroll, app, inputField
 
     selectedOption = var.get()
+
+    inputField = searchField.get()
 
     # Checking which option is selected
     if selectedOption == "1":
@@ -88,6 +145,12 @@ def OnClick():
         resultedList = searchByAuthor()
     if selectedOption == "3":
         resultedList =  searchByTitle()
+    if selectedOption == "4":
+        resultedList =  searchByPosition()
+    if selectedOption == "5":
+        resultedList = searchByDate()
+    if selectedOption == "6":
+        resultedList = searchByStudent()
 
     print(resultedList)
 
@@ -112,23 +175,30 @@ def OnClick():
     # Clear the Resulted List
     result.clear()
 
-    # Issue Button
-    issueBtn = Button(app,
-                     text="Issue",
-                     bg='white',
-                     fg='black',
-                     bd=0.5,
-                     command=issueFromSearch)
-    issueBtn.place(relx=0.2, rely=0.8, relwidth=0.2, relheight=0.1)
+    img1 = PhotoImage(file='img/buttons/searchButtons/add.png')
+    img2 = PhotoImage(file='img/buttons/searchButtons/del.png')
+    img3 = PhotoImage(file='img/buttons/searchButtons/info.png')
+    img4 = PhotoImage(file='img/buttons/searchButtons/issue.png')
+    img5 = PhotoImage(file='img/buttons/searchButtons/return.png')
+    img6 = PhotoImage(file="img/buttons/f-icon.png")
+    img7 = PhotoImage(file="img/buttons/updateBtn.png")
+    img8 = PhotoImage(file='img/buttons/searchButtons/quit.png')
 
-    # Quit Button
-    quitBtn = Button(app,
-                     text="Quit",
-                     bg='white',
-                     fg='black',
-                     bd=0.5,
-                     command=app.destroy)
-    quitBtn.place(relx=0.6, rely=0.8,relwidth=0.2, relheight=0.1)
+
+    buttonsOnSearch = {
+
+        img1 : addBook,
+        img2 : delete,
+        img3 : View,
+        img4 : issueBook,
+        img5 : returnBook,
+        img6 : feedBack,
+        img7 : UpdateShelves,
+        img8 : app.destroy
+
+    }
+    putButtons(buttonsOnSearch, 0.12, 0.8, "+", 0.075, 0.15)
+
     root.destroy()
     app.resizable(0,0)
     app.mainloop()
@@ -141,11 +211,11 @@ def Search():
     root = Toplevel()
     root.title("Search")
     root.iconbitmap('img/searchIcon.ico')
-    root.geometry("250x250")
+    root.geometry("650x250")
 
     # Choose Lable
-    chooseLabel = TTK.Label(root, text="Search by -")
-    chooseLabel.grid(row=0, column=0, columnspan=2, padx=20, pady=10, ipadx=30)
+    chooseLabel = TTK.Label(root, text="Search by -", font=('Gill Sans MT', 12))
+    chooseLabel.grid(row=0, column=0, columnspan=1, padx=20, pady=10)
 
     # Radio Buttons
     var = StringVar(root, "1")
@@ -154,7 +224,10 @@ def Search():
     radioButton = {
         "Book ID" : "1",
         "Author" : "2",
-        "Title": "3"
+        "Title": "3",
+        "Position" : "4",
+        "Date" : "5",
+        "Student Name" : "6"
     }
 
     col = 0
@@ -163,16 +236,16 @@ def Search():
     for (text, value) in radioButton.items():
 
         Rbutton = TTK.Radiobutton(root, text = text, variable = var, value = value)
-        Rbutton.grid(row=1, column=col, columnspan=2, padx=20,ipadx=30)
+        Rbutton.grid(row=1, column=col, columnspan=1, padx=20)
         col += 1
 
     # Search Field
     searchField  = TTK.Entry(root)
-    searchField.place(relx=0.04, rely=0.3, relwidth=0.9, relheight=0.1)
+    searchField.place(relx=0.04, rely=0.35, relwidth=0.9, relheight=0.1)
 
     # Search Button
     searchButton = Button(root, text='Search', bd=0.5, cursor='hand2',state=DISABLED,font=('Gill Sans MT', 14), command=OnClick)
-    searchButton.place(relx=0.3, rely=0.45, relheight=0.15, relwidth=0.4)
+    searchButton.place(relx=0.3, rely=0.5, relheight=0.15, relwidth=0.4)
 
 
     # Running SendEmail on Enter
