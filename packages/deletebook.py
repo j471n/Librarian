@@ -4,6 +4,7 @@ from tkinter import messagebox
 import pymysql
 from os import getenv
 from dotenv import load_dotenv
+import modules.func as Function
 
 load_dotenv()
 
@@ -41,22 +42,8 @@ def deleteBook(event=None):
         messagebox.showerror('Failed', f"Lenght of the Reason Field must be {MIN_LENGTH}")
         return
 
-    checklist =[]
-
-    c = f"SELECT book_id FROM books;"
-    cur.execute(c)
-    con.commit()
-
-
-    for i in cur:
-        checklist.append(i)
-
-    t = (bid,)
-
-    if t not in checklist:
-        messagebox.showinfo('Failed', "You've Entered the Wrong Book ID.")
-        return
-
+    # Checking bookID is correct or not
+    if Function.bookIdChecker(bid) == 1: return
 
     # SQL
     deleteSql = f"DELETE FROM {bookTable} WHERE book_id = '{bid}';"

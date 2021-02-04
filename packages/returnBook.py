@@ -4,6 +4,7 @@ from tkinter import messagebox
 import pymysql
 from os import getenv
 from dotenv import load_dotenv
+import modules.func as Function
 
 load_dotenv()
 
@@ -27,6 +28,9 @@ def returnn(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
+    # Checking bookID is correct or not
+    if Function.bookIdChecker(bid) == 1: return 
+
     try:
         getLocation = f"SELECT location FROM {posTable} WHERE bid = '{bid}';"
         cur.execute(getLocation)
@@ -45,7 +49,7 @@ def returnn(event=None):
     updateStatus = f"UPDATE {bookTable} SET status = 'available', phyLocation = '{pos}', issued_date = NULL, issued_to = NULL WHERE book_id = '{bid}';"
     checkAvail = f"SELECT status, title FROM {bookTable} WHERE book_id = '{bid}';"
 
-    # Executing query and checking isBook issued or not 
+    # Executing query and checking isBook issued or not
     try:
         cur.execute(checkAvail)
         con.commit()

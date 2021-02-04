@@ -6,6 +6,7 @@ from os import getenv
 import pymysql
 from datetime import date
 from dotenv import load_dotenv
+import modules.func as Function
 
 load_dotenv()
 
@@ -29,6 +30,10 @@ def issue(event=None):
         root.destroy()
         messagebox.showerror("Failed", "All Fields are Required.")
         return
+
+    # Checking bookID is correct or not
+    if Function.bookIdChecker(bid) == 1: return
+
 
     # SQL
     updateStatus = f"UPDATE {bookTable} SET status = 'issued', phyLocation = NULL, issued_date = '{issueDate}', issued_to = '{issueto}' WHERE book_id = '{bid}';"
