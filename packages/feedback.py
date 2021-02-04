@@ -1,23 +1,23 @@
-from email.mime import text
 from tkinter import *
 from os import  getenv, stat
 from mailer import Mailer
-from email.message import EmailMessage
 from tkinter import messagebox
 import re
 from dotenv import load_dotenv
 import webbrowser
 from PIL import ImageTk, Image  #PIL -> Pillow
 from .about import aboutUS
-# from about import *
+import smtplib, ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 load_dotenv()
 
 def sendEmail(event=None):
     global email, password, msg
-    senderEmail = email.get()
-    senderPassword = password.get()
-    feedback = msg.get('1.0', END)
+    senderEmail = email.get().strip()
+    senderPassword = password.get().strip()
+    feedback = msg.get('1.0', END).strip()
 
     # Taking String from ENV File
     regx = getenv('VALID_EMAIL')
@@ -31,22 +31,53 @@ def sendEmail(event=None):
         messagebox.showerror("Failed", "Invalid Email Address")
         return
 
-    mail = Mailer(email= senderEmail, password=senderPassword)
-    mail.send(receiver = receiverEmail,
-                subject = "FeedBack About LIBRARIAN",
-                message = feedback)
+    message = MIMEMultipart("alternative")
 
-    print(mail.status)
+    message["Subject"] = "Feedback Mail"
+    message["From"] = senderEmail
+    message["To"] = receiverEmail
 
-    if mail.status:
-        messagebox.showinfo("Success", "Email Send Successfully")
+    # Create the HTML version of your message
+    html = f"""\
+    <html> 
+        <body>
+            <h1 style="margin-left:30px;">Feedback Email</h1>
+            <div style="background-color: black; padding: 30px 40px; border-radius: 30px; margin: 20px; color:white; font-family:sans-serif; box-shadow: 0px 0px 99px -24px #93beffc9; word-wrap: break-word; overflow:hidden !important;">       
+                <h6 style="color: white;">Message from <span>&lt;{senderEmail}&gt;</span></h6>
+                <p style="color: white;"><b><u>Note:-</u> </b> This is the Feedback Email from Digital Library.</p>
+                <p style="color:white;">{feedback}</p>
+            </div>        
+        </body>
+    </html>
+    """
+
+    # Turn these into plain/html MIMEText objects
+    text = MIMEText(html, "html")
+
+    # Add HTML/plain-text parts to MIMEMultipart message
+
+    message.attach(text)
+
+    # Create secure connection with server and send email
+    try:
+
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+            server.login(senderEmail, senderPassword)
+            server.sendmail(senderEmail, receiverEmail, message.as_string())
+
+    except(smtplib.SMTPAuthenticationError):
+        root.destroy()
+        messagebox.showerror("Failed", "Username and Password not accepted")
         return
-    else:
-        messagebox.showerror("Failed", "Something Went Wrong")
-        email.delete(0, END)
-        password.delete(0, END)
-        msg.delete(1.0, END)
+    
+    except:
+        root.destroy()
+        messagebox.showerror("Failed", "Something went wrong try again Later")
+        return
+
     root.destroy()
+    messagebox.showinfo("Success","Feedback Submitted Successfully")
 
 
 
