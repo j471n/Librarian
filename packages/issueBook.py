@@ -32,7 +32,9 @@ def issue(event=None):
         return
 
     # Checking bookID is correct or not
-    if Function.bookIdChecker(bid) == 1: return
+    if Function.bookIdChecker(bid) == 1: 
+        root.destroy()
+        return
 
 
     # SQL

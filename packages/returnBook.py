@@ -29,7 +29,9 @@ def returnn(event=None):
         return
 
     # Checking bookID is correct or not
-    if Function.bookIdChecker(bid) == 1: return 
+    if Function.bookIdChecker(bid) == 1: 
+        root.destroy()
+        return
 
     try:
         getLocation = f"SELECT location FROM {posTable} WHERE bid = '{bid}';"
