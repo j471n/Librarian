@@ -43,28 +43,6 @@ headingLabel = Label(headingFrame1,
                      font=('Great Vibes', 28))
 headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-# Function to put the Buttons on the Screen
-def putButtons(set, X_Axis, Y_Axis, sign, width, height):
-    
-    for _img, fun in set.items():
-
-        btn = Button(root,
-                    text="",
-                    bg='black',
-                    fg='white',
-                    image=_img,
-                    border=0.5,
-                    font=('Gill Sans MT', 12),
-                    cursor='hand2',
-                    anchor=CENTER,
-                    command=fun)
-        btn.place(relx=X_Axis, rely=Y_Axis, relwidth=width, relheight=height)
-
-        if sign == "+":
-            Y_Axis += 0.1
-        elif sign == "-":
-            Y_Axis -= 0.1
-
 
 # Creating a photoimage object to use image
 img1 = PhotoImage(file="img/buttons/add.png")
@@ -86,7 +64,8 @@ buttons = {
     img5: returnBook
 }
 
-putButtons(buttons, 0.28, 0.35, "+", 0.45, 0.1)
+# from modules.func
+Function.putButtons(root, buttons, 0.28, 0.35, "+", 0.45, 0.1, bd=0.5, direction=VERTICAL)
 
 sideButtons = {
 
@@ -97,7 +76,8 @@ sideButtons = {
 
 }
 
-putButtons(sideButtons, 0.03, 0.87, "-", 0.1, 0.1)
+# from modules.func
+Function.putButtons(root, sideButtons, 0.03, 0.87, "-", 0.1, 0.1, bd=0.5, direction=VERTICAL)
 
 Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
 

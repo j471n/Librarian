@@ -31,28 +31,6 @@ bookTable = getenv('BOOK_TABLE')
 result = []
 
 
-
-def putButtons(set, X_Axis, Y_Axis, sign, width, height):
-    
-    for _img, fun in set.items():
-
-        btn = Button(app,
-                    text="",
-                    # bg='black',
-                    # fg='white',
-                    image=_img,
-                    border=0,
-                    # font=('Gill Sans MT', 12),
-                    cursor='hand2',
-                    anchor=CENTER,
-                    command=fun)
-        btn.place(relx=X_Axis, rely=Y_Axis, relwidth=width, relheight=height)
-
-        if sign == "+":
-            X_Axis += 0.1
-        elif sign == "-":
-            X_Axis -= 0.1
-
 # Verify that search Field is empty or not
 def verify(self):
     try:
@@ -197,7 +175,9 @@ def OnClick():
         img8 : app.destroy
 
     }
-    putButtons(buttonsOnSearch, 0.12, 0.8, "+", 0.075, 0.15)
+
+    # from modules.func
+    Function.putButtons(app, buttonsOnSearch, 0.12, 0.8, "+", 0.075, 0.15, direction=HORIZONTAL)
 
     root.destroy()
     app.resizable(0,0)
