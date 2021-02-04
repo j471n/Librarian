@@ -27,11 +27,19 @@ def returnn(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    getLocation = f"SELECT location FROM {posTable} WHERE bid = '{bid}';"
-    cur.execute(getLocation)
-    con.commit()
-    for i in cur:
-        pos = i[0]
+    try:
+        getLocation = f"SELECT location FROM {posTable} WHERE bid = '{bid}';"
+        cur.execute(getLocation)
+        con.commit()
+        for i in cur:
+            pos = i[0]
+
+        print(pos)
+    except:
+        root.destroy()
+        messagebox.showerror("Error", "Book ID is Invalid. (Can't Fetch from the Database)")
+        return
+
 
     # SQL
     updateStatus = f"UPDATE {bookTable} SET status = 'available', phyLocation = '{pos}', issued_date = NULL, issued_to = NULL WHERE book_id = '{bid}';"
