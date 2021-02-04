@@ -13,7 +13,7 @@ cur = con.cursor()  #cur -> cursor
 
 # Table Name and Minimum Length
 bookTable = getenv('BOOK_TABLE')
-posTable = getenv('POSITION_TABLE') 
+posTable = getenv('POSITION_TABLE')
 MIN_LENGTH = 15
 
 # To Check the Length of the Reason
@@ -41,6 +41,23 @@ def deleteBook(event=None):
         messagebox.showerror('Failed', f"Lenght of the Reason Field must be {MIN_LENGTH}")
         return
 
+    checklist =[]
+
+    c = f"SELECT book_id FROM books;"
+    cur.execute(c)
+    con.commit()
+
+
+    for i in cur:
+        checklist.append(i)
+
+    t = (bid,)
+
+    if t not in checklist:
+        messagebox.showinfo('Failed', "You've Entered the Wrong Book ID.")
+        return
+
+
     # SQL
     deleteSql = f"DELETE FROM {bookTable} WHERE book_id = '{bid}';"
     deletePosition = f"DELETE FROM {posTable} WHERE bid = '{bid}';"
@@ -54,17 +71,23 @@ def deleteBook(event=None):
         con.commit()
         for name in cur:
             BookName = name[0]
-        cur.execute(deleteSql)
-        con.commit()
-        cur.execute(deletePosition)
-        con.commit()
 
-        messagebox.showinfo('Success', f"Book Name - {BookName}\nBook Record Deleted Successfully")
+        if BookName != "":
+            cur.execute(deleteSql)
+            con.commit()
+            cur.execute(deletePosition)
+            con.commit()
+
+            root.destroy()
+            messagebox.showinfo('Success', f"Book Name - {BookName}\nBook Record Deleted Successfully")
+        else:
+            print("Something went wrong")
 
     except:
         messagebox.showinfo('Failed', "You've Entered the Wrong Book ID.")
 
     root.destroy()
+    return
 
 
 def delete():
