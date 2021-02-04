@@ -46,12 +46,17 @@ def bookRegister(event=None):
                 print("Book Id Already Exist")
                 root.destroy()
                 messagebox.showwarning("Warning", f"Book id ({book_id}) Already Exist.")
-                return
+                return  
 
             if pos == row[1]:
                 print("Location is Already Reserved")
+
+                cur.execute(f"SELECT title FROM books WHERE phyLocation =  '{pos}';")
+                con.commit()
+                bTitle = [val for val in cur]
+                
                 root.destroy()
-                messagebox.showwarning("Warning", f"Position ({pos}) Already Reserved.")
+                messagebox.showwarning("Warning", f"Position ({pos}) Already Reserved by - {bTitle[0][0]}")
                 return
 
         cur.execute(insertBooks)
@@ -59,7 +64,7 @@ def bookRegister(event=None):
         cur.execute(insertPosition)
         con.commit()
 
-        messagebox.showinfo('Success', f"Book Added Successfully. It should be at {pos} in Pysical Library")
+        messagebox.showinfo('Success', f"Book Added Successfully. It should be at {pos} in Physical Library")
     except:
         messagebox.showinfo("Error", "Can't Add Data Into Database")
         print(messagebox.ERROR)
@@ -86,7 +91,7 @@ def addBook():
     root.iconbitmap('img/logo.ico')
 
     # Connecting the Database
-    con = pymysql.connect(host="localhost", user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+    con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
     cur = con.cursor()  #cur -> cursor
 
     #Adding Image to Add Book
