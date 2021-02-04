@@ -1,20 +1,24 @@
-from tkinter import font
-from PIL import ImageTk, Image  #PIL -> Pillow
+# Importing Files
+
+from tkinter import *
+from PIL import ImageTk, Image
 import pymysql
-from addBook import *
-from viewsBook import *
-from deletebook import *
-from issueBook import *
-from returnBook import *
+from packages.addBook import *
+from packages.viewsBook import *
+from packages.deletebook import *
+from packages.issueBook import *
+from packages.returnBook import *
 from os import getenv
 from dotenv import load_dotenv
-from feedback import feedBack
-from about import aboutUS
+from packages.feedback import feedBack
+from packages.about import aboutUS
+from packages.search import Search
+from packages.shelvesUpdation import UpdateShelves
 
+# Loading ENV
 load_dotenv()
-# Function form viewsBook.py to connect DB
 
-
+# Initializing Root
 root = Tk()
 root.title("Librarian")
 root.iconbitmap('img/logo.ico')
@@ -29,7 +33,7 @@ bg = bg.resize((600, 500), Image.ANTIALIAS)
 img = ImageTk.PhotoImage(bg)
 Label(root, image=img).pack()
 
-
+# Heading Frame for Heading
 headingFrame1 = Frame(root, bg="#FFBB00", bd=5)
 headingFrame1.place(relx=0.2, rely=0.05, relwidth=0.6, relheight=0.16)
 headingLabel = Label(headingFrame1,
@@ -48,33 +52,35 @@ img4 = PhotoImage(file="img/buttons/issue.png")
 img5 = PhotoImage(file="img/buttons/return.png")
 img6 = PhotoImage(file="img/buttons/f-icon.png")
 img7 = PhotoImage(file="img/buttons/info-icon.png")
+img8 = PhotoImage(file="img/buttons/search.png")
+img9 = PhotoImage(file="img/buttons/updateBtn.png")
 
-# Resizing image to fit on button
+# Initializing the buttons and placing them
+buttons = {
+    img1: addBook,
+    img2: delete,
+    img3: View,
+    img4: issueBook,
+    img5: returnBook
+}
 
-btn1 = Button(root,text="", bg='black', fg='white', image=img1, border=0.5, compound=LEFT, padx=40, font=('Gill Sans MT', 12), anchor=CENTER, command=addBook)
-btn1.place(relx=0.28,rely=0.35, relwidth=0.45,relheight=0.1)
+# from modules.func
+Function.putButtons(root, buttons, 0.28, 0.35, "+", 0.45, 0.1, bd=0.5, direction=VERTICAL)
 
-btn2 = Button(root,text="",bg='black', fg='white', image=img2, border=0.5,compound=LEFT, padx=25, font=('Gill Sans MT', 12),anchor=CENTER, command=delete)
-btn2.place(relx=0.28,rely=0.45, relwidth=0.45,relheight=0.1)
+sideButtons = {
 
-btn3 = Button(root,text="",bg='black', fg='white', image=img3, border=0.5,compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER,command=View)
-btn3.place(relx=0.28,rely=0.55, relwidth=0.45,relheight=0.1)
+    img6 : feedBack,
+    img7 : aboutUS,
+    img8 : Search,
+    img9 : UpdateShelves
 
-btn4 = Button(root,text="",bg='black', fg='white', image=img4, border=0.5,compound=LEFT, padx=40, font=('Gill Sans MT', 12), anchor=CENTER,command=issueBook)
-btn4.place(relx=0.28,rely=0.65, relwidth=0.45,relheight=0.1)
+}
 
-btn5 = Button(root,text="",bg='black', fg='white', image=img5, border=0.5,compound=LEFT, padx=25, font=('Gill Sans MT', 12),anchor=CENTER, command=returnBook)
-btn5.place(relx=0.28,rely=0.75, relwidth=0.45,relheight=0.1)
-
-btn6 = Button(root, text="", bg='black', border = 0.8, image=img6, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER, command=feedBack)
-btn6.place(relx=0.03, rely=0.87, relwidth=0.1, relheight=0.1)
-
-btn7 = Button(root, text="", bg='black', border = 0.8, image=img7, compound=LEFT, padx=25, font=('Gill Sans MT', 12), anchor=CENTER, command=aboutUS)
-btn7.place(relx=0.03, rely=0.77, relwidth=0.1, relheight=0.1)
-
+# from modules.func
+Function.putButtons(root, sideButtons, 0.03, 0.87, "-", 0.1, 0.1, bd=0.5, direction=VERTICAL)
 
 Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
 
-
+# Restrict resizing
 root.resizable(0,0)
 root.mainloop()
