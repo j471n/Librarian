@@ -5,6 +5,7 @@ from os import getenv
 import pymysql
 from dotenv import load_dotenv
 import re
+from .database import *
 
 
 load_dotenv()
@@ -114,7 +115,7 @@ def positionVerification(div, position):
 
 # Function to put the Buttons on the window
 def putButtons(window, set, X_Axis, Y_Axis, sign, width, height, bd=0, direction=VERTICAL):
-    print(set)
+
     for _img, fun in set.items():
 
         btn = Button(
