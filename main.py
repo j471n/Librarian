@@ -101,6 +101,6 @@ putButtons(sideButtons, 0.03, 0.87, "-", 0.1, 0.1)
 
 Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
 
-# Restric t resizing
+# Restrict resizing
 root.resizable(0,0)
 root.mainloop()
