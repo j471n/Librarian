@@ -16,7 +16,7 @@ cur = con.cursor()
 
 # Book Table
 bookTable = getenv('BOOK_TABLE')
-
+# root = Tk()
 
 def createTable(dir,height=0.5, width=1, marginX=0.1, marginY=0.1, loopThrough=cur, query="", scroll="NO", sheight=0.6, swidth=0.01, sMarginX=0.9, sMarginY=0.2):
     detail_tree = ttk.Treeview(dir)
@@ -110,3 +110,33 @@ def positionVerification(div, position):
             "Failed",
             "Location Field should include '-' or '_' and Numbers (0-9)")
         return
+
+
+# Function to put the Buttons on the window
+def putButtons(window, set, X_Axis, Y_Axis, sign, width, height, bd=0, direction=VERTICAL):
+    print(set)
+    for _img, fun in set.items():
+
+        btn = Button(
+            window,
+            text="",
+            image=_img,
+            border=bd,
+            # font=('Gill Sans MT', 12),
+            cursor='hand2',
+            anchor=CENTER,
+            command=fun)
+        btn.place(relx=X_Axis, rely=Y_Axis, relwidth=width, relheight=height)
+
+        if direction == VERTICAL:
+            if sign == "+":
+                Y_Axis += 0.1
+
+            elif sign == "-":
+                Y_Axis -= 0.1
+
+        elif direction == HORIZONTAL:
+            if sign == "+":
+                X_Axis += 0.1
+            elif sign == "-":
+                X_Axis -= 0.1
