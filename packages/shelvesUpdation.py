@@ -28,7 +28,7 @@ def update():
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    # Position verificaion
+    # Position verification
     Function.positionVerification(div=root, position=pos)
 
     # SQL Queries
