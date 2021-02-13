@@ -79,7 +79,7 @@ sideButtons = {
 # from modules.func
 Function.putButtons(root, sideButtons, 0.03, 0.87, "-", 0.1, 0.1, bd=0.5, direction=VERTICAL)
 
-Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
+Label(root, text='v1.1.5',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
 
 # Restrict resizing
 root.resizable(0,0)
