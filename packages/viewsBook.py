@@ -1,7 +1,7 @@
 from tkinter import *
 import PIL
 from tkinter import messagebox
-import pymysql
+import sqlite3
 from os import getenv
 from dotenv import load_dotenv
 from tkinter import ttk
@@ -10,10 +10,7 @@ import modules.func as Function
 load_dotenv()
 
 # Function to connect if database does not exist
-con = pymysql.connect(host=getenv('HOST'),
-                        user=getenv('USER'),
-                        password=getenv('DB_PASS'),
-                        database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 # Enter Table Names here
 bookTable = getenv('BOOK_TABLE')
@@ -56,6 +53,7 @@ def View():
     cur.execute(length)
     con.commit()
     Books = [value for value in cur]
+    con.close()
 
     # Label to Print Total Books
     Label(root, text=f"Total Books : {Books[0][0]} | Available Books : {Books[0][1]} | Issued Books : {Books[0][0]-Books[0][1]}", font=('Gill Sans MT', 12), padx=5, anchor=E).place(relx=0, rely=0.95)
