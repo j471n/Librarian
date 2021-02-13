@@ -1,6 +1,5 @@
 from tkinter import *
-from os import  getenv, stat
-from mailer import Mailer
+from os import  getenv
 from tkinter import messagebox
 import re
 from dotenv import load_dotenv
