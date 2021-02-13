@@ -1,5 +1,5 @@
 from tkinter import *
-import pymysql
+import sqlite3
 from os import getenv
 from dotenv import load_dotenv
 import tkinter.ttk as TTK
@@ -21,7 +21,7 @@ from .feedback import feedBack
 load_dotenv()
 
 # Connecting to DB
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 
 # Book Table
@@ -105,7 +105,7 @@ def issueFromSearch():
 
 
 # Result Page when the Search Button is Clicked
-def OnClick():
+def OnClick(e=None):
 
     # Process Start Time
     start_time = datetime.now()
