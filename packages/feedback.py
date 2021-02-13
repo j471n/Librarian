@@ -2,7 +2,7 @@ from tkinter import *
 from os import  getenv
 from tkinter import messagebox
 import re
-from dotenv import load_dotenv
+from dotenv import *
 import webbrowser
 from PIL import ImageTk, Image  #PIL -> Pillow
 from .about import aboutUS
@@ -10,7 +10,9 @@ import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
+
 
 def sendEmail(event=None):
     global email, password, msg
@@ -69,7 +71,7 @@ def sendEmail(event=None):
         root.destroy()
         messagebox.showerror("Failed", "Username and Password not accepted")
         return
-    
+
     except:
         root.destroy()
         messagebox.showerror("Failed", "Something went wrong try again Later")

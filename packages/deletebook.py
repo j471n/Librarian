@@ -3,10 +3,11 @@ from PIL import ImageTk, Image
 from tkinter import messagebox
 import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import modules.func as Function
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Connecting to the Database
 con = sqlite3.connect(getenv('DATABASE'))

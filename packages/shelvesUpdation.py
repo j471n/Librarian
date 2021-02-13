@@ -1,13 +1,14 @@
 from tkinter import *
 import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import tkinter.ttk as TTK
 from tkinter import messagebox
 # import func as Function
 import modules.func as Function
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Connecting to DB
 con = sqlite3.connect(getenv('DATABASE'))

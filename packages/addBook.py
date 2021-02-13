@@ -3,14 +3,14 @@ from PIL import ImageTk, Image
 from tkinter import messagebox
 import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import re
 
-load_dotenv()
-
+env = find_dotenv('env/.env')
+load_dotenv(env)
 # Connecting the Database
 con = sqlite3.connect(getenv('DATABASE'))
-cur = con.cursor()  
+cur = con.cursor()
 # Adding book to Database
 def bookRegister(event=None):
 

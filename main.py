@@ -8,14 +8,15 @@ from packages.deletebook import *
 from packages.issueBook import *
 from packages.returnBook import *
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 from packages.feedback import feedBack
 from packages.about import aboutUS
 from packages.search import Search
 from packages.shelvesUpdation import UpdateShelves
 
 # Loading ENV
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Initializing Root
 root = Tk()

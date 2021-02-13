@@ -1,8 +1,9 @@
 from os import getenv
 import sqlite3
-from dotenv import load_dotenv
+from dotenv import *
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 
 def connectDB():

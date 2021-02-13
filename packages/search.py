@@ -1,7 +1,7 @@
 from tkinter import *
 import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import tkinter.ttk as TTK
 from datetime import datetime
 import modules.func as Function
@@ -18,7 +18,8 @@ from .returnBook import returnBook
 from .shelvesUpdation import UpdateShelves
 from .feedback import feedBack
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Connecting to DB
 con = sqlite3.connect(getenv('DATABASE'))

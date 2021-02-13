@@ -5,11 +5,11 @@ from tkinter import messagebox
 from os import getenv
 import sqlite3
 from datetime import date
-from dotenv import load_dotenv
+from dotenv import *
 import modules.func as Function
 
-load_dotenv()
-
+env = find_dotenv('env/.env')
+load_dotenv(env)
 # Connecting to DB
 con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()  #cur -> cursor
