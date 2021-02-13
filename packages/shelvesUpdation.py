@@ -1,5 +1,5 @@
 from tkinter import *
-import pymysql
+import sqlite3
 from os import getenv
 from dotenv import load_dotenv
 import tkinter.ttk as TTK
@@ -10,7 +10,7 @@ import modules.func as Function
 load_dotenv()
 
 # Connecting to DB
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 
 # Book Table
@@ -31,7 +31,7 @@ def update():
     Function.positionVerification(div=root, position=pos)
 
     # SQL Queries
-    query1 = f"UPDATE {bookTable} SET phyLocation = '{pos}' WHERE book_id = '{bid}';" 
+    query1 = f"UPDATE {bookTable} SET phyLocation = '{pos}' WHERE book_id = '{bid}';"
     query2 = f"UPDATE {posTable} SET location = '{pos}' WHERE bid = '{bid}';"
 
     check0 = f"SELECT location FROM {posTable};"
