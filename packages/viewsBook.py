@@ -53,7 +53,6 @@ def View():
     cur.execute(length)
     con.commit()
     Books = [value for value in cur]
-    con.close()
 
     # Label to Print Total Books
     Label(root, text=f"Total Books : {Books[0][0]} | Available Books : {Books[0][1]} | Issued Books : {Books[0][0]-Books[0][1]}", font=('Gill Sans MT', 12), padx=5, anchor=E).place(relx=0, rely=0.95)
