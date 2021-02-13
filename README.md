@@ -55,7 +55,9 @@ This is Just like a project Report you can read it to get all the information.
 
 [**REFERENCES**](#5)
 
-[**Contributors**](#6)
+[*Contributors*](#6)
+
+[*FAQ*](#7)
 
 
 
@@ -477,3 +479,10 @@ There are some brief about function we’ve use -
 
  - [Jatin Sharma](https://github.com/j471n/)
  - [Anubhav Srivastava](https://github.com/Anubhav-Sri-04)
+
+
+<h3 id='7'>FAQs</h3>
+
+ - [How to install Python?](https://www.python.org/downloads/)
+ - [How to install PIP in windows?](https://phoenixnap.com/kb/install-pip-windows)
+ - [How to install packages in Python using PIP?](https://datatofish.com/install-package-python-using-pip/)
