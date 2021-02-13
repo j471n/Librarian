@@ -1,49 +1,33 @@
 from os import getenv
-import pymysql
+import sqlite3
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
 def connectDB():
-    try:
-        global con, cur
-        # Connecting to the Database
-        con = pymysql.connect(host=getenv('HOST'),
-                              user=getenv('USER'),
-                              password=getenv('DB_PASS'),
-                              database=getenv('DB_NAME'))
-        cur = con.cursor()  #cur -> cursor
-        print("Database Connected, Already Existed.")
+    # try:
+    global con, cur
 
-    except:
+    # Connecting to the Database
+    con = sqlite3.connect(getenv('DATABASE'))
+    cur = con.cursor()  #cur -> cursor
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+
+
+    if len(cur.fetchall()) == 0:
 
         # SQL
-        q1 = f"CREATE DATABASE {getenv('DB_NAME')};"
-        q2 = f"use {getenv('DB_NAME')};"
-        q3 = 'CREATE TABLE books (book_id VARCHAR(200) PRIMARY KEY, title VARCHAR(50), author VARCHAR(30),publication VARCHAR(100), status VARCHAR(30), phyLocation VARCHAR(50), issued_date VARCHAR(15), issued_to VARCHAR(25));'
-        q4 = "CREATE TABLE position (bid VARCHAR(200) PRIMARY KEY, location VARCHAR(50));"
-        con = pymysql.connect(host=getenv('HOST'),
-                              user=getenv('USER'),
-                              password=getenv('DB_PASS'))
-        cur = con.cursor()
+        q1 = "CREATE TABLE books (book_id varchar(200) NOT NULL, title varchar(50), author varchar(30),publication varchar(100), status varchar(30),phyLocation varchar(50),issued_date varchar(15),issued_to varchar(25),PRIMARY KEY (book_id));"
+        q2 = 'CREATE TABLE position (bid varchar(200) NOT NULL,location varchar(50),PRIMARY KEY (bid));'
 
-        cur.execute(q1)
-        con.commit()
-        cur.execute(q2)
-        con.commit()
-        cur.execute(q3)
-        con.commit()
-        cur.execute(q4)
+        con = sqlite3.connect(getenv('DATABASE'))
+        con.execute(q1)
+        con.execute(q2)
         con.commit()
 
-        # Connecting to the Database
-        con = pymysql.connect(host=getenv('HOST'),
-                              user=getenv('USER'),
-                              password=getenv('DB_PASS'),
-                              database=getenv('DB_NAME'))
-        cur = con.cursor()
         print("Database Connected, New Created")
-
+    else:
+        print("Database Connected, Already Existed.")
 
 connectDB()
