@@ -3,7 +3,7 @@ from tkinter.font import Font
 from PIL import ImageTk, Image
 from tkinter import messagebox
 from os import getenv
-import pymysql
+import sqlite3
 from datetime import date
 from dotenv import load_dotenv
 import modules.func as Function
@@ -11,7 +11,7 @@ import modules.func as Function
 load_dotenv()
 
 # Connecting to DB
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
@@ -32,7 +32,7 @@ def issue(event=None):
         return
 
     # Checking bookID is correct or not
-    if Function.bookIdChecker(bid) == 1: 
+    if Function.bookIdChecker(bid) == 1:
         root.destroy()
         return
 
