@@ -2,7 +2,6 @@
 
 from tkinter import *
 from PIL import ImageTk, Image
-import pymysql
 from packages.addBook import *
 from packages.viewsBook import *
 from packages.deletebook import *
