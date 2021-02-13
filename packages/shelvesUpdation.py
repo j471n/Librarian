@@ -1,16 +1,17 @@
 from tkinter import *
-import pymysql
+import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import tkinter.ttk as TTK
 from tkinter import messagebox
 # import func as Function
 import modules.func as Function
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Connecting to DB
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 
 # Book Table
@@ -27,11 +28,11 @@ def update():
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
-    # Position verificaion
+    # Position verification
     Function.positionVerification(div=root, position=pos)
 
     # SQL Queries
-    query1 = f"UPDATE {bookTable} SET phyLocation = '{pos}' WHERE book_id = '{bid}';" 
+    query1 = f"UPDATE {bookTable} SET phyLocation = '{pos}' WHERE book_id = '{bid}';"
     query2 = f"UPDATE {posTable} SET location = '{pos}' WHERE bid = '{bid}';"
 
     check0 = f"SELECT location FROM {posTable};"

@@ -1,15 +1,16 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
-import pymysql
+import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import modules.func as Function
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Connecting to the Database
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()  #cur -> cursor
 
 # Table Name and Minimum Length
@@ -19,12 +20,12 @@ MIN_LENGTH = 15
 
 # To Check the Length of the Reason
 def checkWords(self):
-    global counter, lenght, reason
+    global counter, length, reason
 
     reason = bookInfo2.get('1.0', END).strip()
-    lenght = len(list(reason.split(" "))) - 1
-    if lenght <= MIN_LENGTH:
-        counter.config(text=MIN_LENGTH-lenght)
+    length = len(list(reason.split(" "))) - 1
+    if length <= MIN_LENGTH:
+        counter.config(text=MIN_LENGTH-length)
 
 # Get the Fields value and  Checking that Every thing has a value and Check reason is of enough length
 def deleteBook(event=None):
@@ -37,9 +38,9 @@ def deleteBook(event=None):
         root.destroy()
         messagebox.showerror("Failed", "Book ID is Mandatory")
         return
-    elif lenght < MIN_LENGTH:
+    elif length < MIN_LENGTH:
         root.destroy()
-        messagebox.showerror('Failed', f"Lenght of the Reason Field must be {MIN_LENGTH}")
+        messagebox.showerror('Failed', f"Length of the Reason Field must be {MIN_LENGTH}")
         return
 
     # Checking bookID is correct or not
@@ -50,16 +51,25 @@ def deleteBook(event=None):
     # SQL
     deleteSql = f"DELETE FROM {bookTable} WHERE book_id = '{bid}';"
     deletePosition = f"DELETE FROM {posTable} WHERE bid = '{bid}';"
-    book_name = f"SELECT title FROM {bookTable} WHERE book_id = '{bid}';"
-
-    global BookName
+    book_details = f"SELECT title, status, issued_to FROM {bookTable} WHERE book_id = '{bid}';"
+    global BookName, BookStatus, issuedTO
 
     # Executing the Queries
     try:
-        cur.execute(book_name)
+        cur.execute(book_details)
         con.commit()
-        for name in cur:
-            BookName = name[0]
+        for data in cur:
+            BookName = data[0].capitalize()
+            BookStatus = data[1]
+            issuedTO = data[2].capitalize()
+
+        if BookStatus == "issued":
+            answer = messagebox.askyesno("Confirm", f"The Book ({BookName}) is already issued to - {issuedTO}.\nDo you really want to delete the Book?")
+            if answer == False:
+                root.destroy()
+                messagebox.showinfo("Failed", "You've chosen not to delete the Book")
+                return
+
 
         if BookName != "":
             cur.execute(deleteSql)

@@ -1,15 +1,16 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
-import pymysql
+import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import modules.func as Function
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Connecting to the DB
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
@@ -29,7 +30,7 @@ def returnn(event=None):
         return
 
     # Checking bookID is correct or not
-    if Function.bookIdChecker(bid) == 1: 
+    if Function.bookIdChecker(bid) == 1:
         root.destroy()
         return
 

@@ -1,19 +1,17 @@
 from tkinter import *
 import PIL
 from tkinter import messagebox
-import pymysql
+import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 from tkinter import ttk
 import modules.func as Function
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Function to connect if database does not exist
-con = pymysql.connect(host=getenv('HOST'),
-                        user=getenv('USER'),
-                        password=getenv('DB_PASS'),
-                        database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 # Enter Table Names here
 bookTable = getenv('BOOK_TABLE')
@@ -47,7 +45,7 @@ def View():
 
     # Select All books from the Library
     getBooks = f"SELECT * FROM {bookTable} ORDER BY status;"
-    
+
     # Creating the Treeview and Scrolling
     Function.createTable(dir=root, height=0.6,width=1, marginX=0., marginY=0.25, query=getBooks, scroll="yes", sMarginX=0.988, sMarginY=0.285, sheight=0.56, swidth=0.012)
 

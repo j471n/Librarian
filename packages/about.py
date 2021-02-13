@@ -2,9 +2,11 @@ from tkinter import *
 from os import getenv
 from dotenv import load_dotenv
 import webbrowser
-from PIL import ImageTk, Image 
+from PIL import ImageTk, Image
+from dotenv import *
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Opening Profile1 URL in web browser
 def profile1():
@@ -30,7 +32,7 @@ def aboutUS():
     # Importing Images
     bg, bg1, button = Image.open("img/profile/1.png"), Image.open("img/profile/2.png"), Image.open('img/profile/insta.png')
     bg, bg1, button = bg.resize((350, 470), Image.ANTIALIAS), bg1.resize( (350, 470), Image.ANTIALIAS), button.resize((170, 35), Image.ANTIALIAS)
-    
+
     # Making Images as Object
     img, img1 , buttonIMG= ImageTk.PhotoImage(bg), ImageTk.PhotoImage(bg1) , ImageTk.PhotoImage(button)
 

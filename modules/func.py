@@ -2,17 +2,17 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from os import getenv
-import pymysql
-from dotenv import load_dotenv
+from dotenv import*
 import re
 from .database import *
 
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 
 # Connecting to DB
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 
 # Book Table

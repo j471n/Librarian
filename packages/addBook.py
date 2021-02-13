@@ -1,14 +1,16 @@
 from tkinter import *
 from PIL import ImageTk, Image
 from tkinter import messagebox
-import pymysql
+import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import re
 
-load_dotenv()
-
-
+env = find_dotenv('env/.env')
+load_dotenv(env)
+# Connecting the Database
+con = sqlite3.connect(getenv('DATABASE'))
+cur = con.cursor()
 # Adding book to Database
 def bookRegister(event=None):
 
@@ -46,7 +48,7 @@ def bookRegister(event=None):
                 print("Book Id Already Exist")
                 root.destroy()
                 messagebox.showwarning("Warning", f"Book id ({book_id}) Already Exist.")
-                return  
+                return
 
             if pos == row[1]:
                 print("Location is Already Reserved")
@@ -54,21 +56,21 @@ def bookRegister(event=None):
                 cur.execute(f"SELECT title FROM books WHERE phyLocation =  '{pos}';")
                 con.commit()
                 bTitle = [val for val in cur]
-                
+
                 root.destroy()
                 messagebox.showwarning("Warning", f"Position ({pos}) Already Reserved by - {bTitle[0][0]}")
                 return
 
         cur.execute(insertBooks)
-        con.commit()
         cur.execute(insertPosition)
         con.commit()
 
         messagebox.showinfo('Success', f"Book Added Successfully. It should be at {pos} in Physical Library")
     except:
-        messagebox.showinfo("Error", "Can't Add Data Into Database")
-        print(messagebox.ERROR)
+        messagebox.showerror("Error", "Can't Add Data Into Database")
 
+
+    con.close()
     print("Book ID : ",book_id)
     print("Book Title : ", title)
     print("Book Author : ",author)
@@ -90,10 +92,6 @@ def addBook():
     root.geometry("600x500")
     root.iconbitmap('img/logo.ico')
 
-    # Connecting the Database
-    con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
-    cur = con.cursor()  #cur -> cursor
-
     #Adding Image to Add Book
     global img
     bg = Image.open("img/background/addBook.jpg")
@@ -103,7 +101,7 @@ def addBook():
 
     # Tables Name
     bookTable = getenv('BOOK_TABLE')
-    posTable = getenv('POSITION_TABLE') 
+    posTable = getenv('POSITION_TABLE')
 
     # A container
     headingFrame1 = Frame(root, bg="#FFBB00", bd=5)

@@ -1,7 +1,7 @@
 from tkinter import *
-import pymysql
+import sqlite3
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 import tkinter.ttk as TTK
 from datetime import datetime
 import modules.func as Function
@@ -18,10 +18,11 @@ from .returnBook import returnBook
 from .shelvesUpdation import UpdateShelves
 from .feedback import feedBack
 
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Connecting to DB
-con = pymysql.connect(host=getenv('HOST'), user=getenv('USER'), password=getenv('DB_PASS'), database=getenv('DB_NAME'))
+con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 
 # Book Table
@@ -105,7 +106,7 @@ def issueFromSearch():
 
 
 # Result Page when the Search Button is Clicked
-def OnClick():
+def OnClick(e=None):
 
     # Process Start Time
     start_time = datetime.now()

@@ -2,21 +2,21 @@
 
 from tkinter import *
 from PIL import ImageTk, Image
-import pymysql
 from packages.addBook import *
 from packages.viewsBook import *
 from packages.deletebook import *
 from packages.issueBook import *
 from packages.returnBook import *
 from os import getenv
-from dotenv import load_dotenv
+from dotenv import *
 from packages.feedback import feedBack
 from packages.about import aboutUS
 from packages.search import Search
 from packages.shelvesUpdation import UpdateShelves
 
 # Loading ENV
-load_dotenv()
+env = find_dotenv('env/.env')
+load_dotenv(env)
 
 # Initializing Root
 root = Tk()
@@ -79,7 +79,7 @@ sideButtons = {
 # from modules.func
 Function.putButtons(root, sideButtons, 0.03, 0.87, "-", 0.1, 0.1, bd=0.5, direction=VERTICAL)
 
-Label(root, text='v1.0.0',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
+Label(root, text='v1.1.5',font=('Gill Sans MT', 12), padx=5).place(relx=0.91, rely=0.94)
 
 # Restrict resizing
 root.resizable(0,0)
