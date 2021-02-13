@@ -131,16 +131,16 @@ def putButtons(window, set, X_Axis, Y_Axis, sign, width, height, bd=0, direction
 
         if direction == VERTICAL:
             if sign == "+":
-                Y_Axis += 0.1
+                Y_Axis += height
 
             elif sign == "-":
-                Y_Axis -= 0.1
+                Y_Axis -= height
 
         elif direction == HORIZONTAL:
             if sign == "+":
-                X_Axis += 0.1
+                X_Axis += width
             elif sign == "-":
-                X_Axis -= 0.1
+                X_Axis -= width
 
 
 # Checking BookID is correct or not Implemented in DeleteBook, IssuedBook, Return Book
