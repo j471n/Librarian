@@ -1,5 +1,3 @@
-from calendar import month
-from os.path import relpath
 from tkinter import *
 import sqlite3
 from dotenv import *
@@ -9,6 +7,7 @@ import modules.func as Function
 from PIL import ImageTk, Image
 from tkcalendar import DateEntry
 from tkinter.filedialog import askopenfilename
+from tkinter import messagebox
 
 env = find_dotenv('env/.env')
 load_dotenv(env)
@@ -23,20 +22,22 @@ posTable = getenv('POSITION_TABLE')
 
 
 def OpenFile():
-    global path
-    path = askopenfilename(filetypes=[("JPEG Files",
-                                       '*.jpg'), ("PNG Files", '*.png')])
-    print(path)
+    global path, RemoveButton
+    path = askopenfilename(filetypes=[("JPEG Files", '*.jpg'), ("PNG Files", '*.png')])
+    StudentImageEntry.config(text="Choosed")
+    RemoveButton = TTK.Button(addAPP,text='x', cursor='hand2', command=RemoveFile)
+    RemoveButton.place(relx=0.53, rely=0.68, relwidth=0.05)
 
-
-def convertToBinaryData(filename):
-    #Convert digital data to binary format
-    with open(filename, 'rb') as file:
-        blobData = file.read()
-    return blobData
+# To remove the File
+def RemoveFile():
+    path = ""
+    RemoveButton.destroy()
+    StudentImageEntry.config(text="Choose")
 
 
 def addStudentSubmit():
+    global profileImage
+
     nameValue = studentNameEntry.get()
     dobValue = studentDobEntry.get_date()
     addressValue = studentAddressEntry.get()
@@ -44,26 +45,58 @@ def addStudentSubmit():
     branchValue = studentBranchEntry.get()
     contactValue = studentContactEntry.get()
     gradYearValue = studentGraduationYearEntry.get()
+    genderValue = var.get()
 
-    print("socond path", path)
-    profileImage = convertToBinaryData(path)
+    try:
+        int(contactValue)
+    except:
+        messagebox.showwarning("Warning", "Contact No. Must be correct.\nDon't put space and '-' between numbers")
+        studentContactEntry.delete(0, END)
+        print('Not correct')
+        return
 
-    print(nameValue, dobValue, addressValue, courseValue, branchValue,
-          contactValue, gradYearValue)
+    # return
+    if len(gradYearValue) == 4:
+        try:
+            gradYearValue = int(gradYearValue)
+        except:
+            print("Not Interger")
+            messagebox.showwarning("Warning", "Year must be Integer")
+            studentGraduationYearEntry.delete(0, END)
 
+    else:
+        messagebox.showerror("Failed", "Enter the Correct Year")
+        studentGraduationYearEntry.delete(0, END)
+        return
+
+    try:
+        profileImage = Function.reduceImage(path)
+    except(NameError):
+        if genderValue == 'M':
+            print("Using Male Unknown Image")
+            path = "img/profile/male.jpg"
+        elif genderValue == 'F':
+            print("Using FeMale Unknown Image")
+            path = "img/profile/female.jpg"
+
+        profileImage = Function.reduceImage(path)
+
+
+    insertQuery = f"INSERT INTO {studentsTable} (student_name, dob, course, branch, address, contact, img, g_year, gender) VALUES (?,?,?,?,?,?,?,?,?);"
     values = (nameValue, dobValue, courseValue, branchValue, addressValue,
-              contactValue, profileImage, gradYearValue)
+              contactValue, profileImage, gradYearValue, genderValue)
 
     con.execute(insertQuery, values)
     con.commit()
     print("Inserted Successfully.")
+    addAPP.destroy()
 
 
 # To Adding Student in the Database
 def addStudent():
     # root.destroy()
 
-    global addAPP, studentAddressEntry, studentDobEntry, studentNameEntry, studentContactEntry, studentBranchEntry, studentCourseEntry, studentGraduationYearEntry, entry
+    global addAPP, studentAddressEntry, studentDobEntry, studentNameEntry, studentContactEntry, studentBranchEntry, studentCourseEntry, studentGraduationYearEntry, entry, var, StudentImageEntry
 
     addAPP = Toplevel()
     addAPP.title("Add Student")
@@ -110,6 +143,20 @@ def addStudent():
                                 borderwidth=2)
     studentDobEntry.place(relx=0.4, rely=0.32)
 
+    # Gender Lable
+    genderLabel = Label(addAPP,
+                            text="Gender : ",
+                            bg='white',
+                            fg='black',
+                            font=('Gill Sans MT', 12))
+    genderLabel.place(relx=0.6, rely=0.305)
+
+    var = StringVar()
+    monthchoosen = TTK.Combobox(addAPP, width = 27, textvariable = var, state="readonly")
+    monthchoosen.place(relx=0.75, rely=0.32, relwidth=0.1)
+    # Adding combobox drop down list
+    monthchoosen['values'] = ('M', 'F')
+    monthchoosen.current(0)
     # Student Coruse
 
     studentCourseLabel = Label(addAPP,
