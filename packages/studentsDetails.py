@@ -267,36 +267,9 @@ def studentPortalWindow():
     bottomButtons = {exitimg: root.destroy}
 
     # from modules.func
-    Function.putButtons(root,
-                        leftbuttons,
-                        -0.05,
-                        0.35,
-                        "+",
-                        0.45,
-                        0.17,
-                        bgcolor=customColor,
-                        bd=0,
-                        direction=VERTICAL)
-    Function.putButtons(root,
-                        rightbuttons,
-                        0.6,
-                        0.35,
-                        "+",
-                        0.45,
-                        0.17,
-                        bgcolor=customColor,
-                        bd=0,
-                        direction=VERTICAL)
-    Function.putButtons(root,
-                        bottomButtons,
-                        0.37,
-                        0.75,
-                        "+",
-                        0.26,
-                        0.17,
-                        bgcolor=customColor,
-                        bd=0,
-                        direction=VERTICAL)
+    Function.putButtons(root, leftbuttons, -0.05, 0.35, "+", 0.45,0.17,bgcolor=customColor, bd=0, direction=VERTICAL)
+    Function.putButtons(root, rightbuttons, 0.6, 0.35, "+", 0.45, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
+    Function.putButtons(root, bottomButtons, 0.37, 0.75, "+", 0.26, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
     root.resizable(0, 0)
 
     root.mainloop()
