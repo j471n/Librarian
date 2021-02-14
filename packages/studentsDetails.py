@@ -1,7 +1,7 @@
 from tkinter import *
 import sqlite3
 from dotenv import *
-from os import getenv
+from os import getenv, pardir
 import tkinter.ttk as TTK
 import modules.func as Function
 from PIL import ImageTk, Image
@@ -47,6 +47,11 @@ def addStudentSubmit():
     gradYearValue = studentGraduationYearEntry.get()
     genderValue = var.get()
 
+    answer = messagebox.askyesno("Confirm", f"Do you want to add \"{nameValue.capitalize()}\" as Student?")
+    if answer == False:
+        addAPP.destroy()
+        return
+
     try:
         int(contactValue)
     except:
@@ -86,15 +91,19 @@ def addStudentSubmit():
     values = (nameValue, dobValue, courseValue, branchValue, addressValue,
               contactValue, profileImage, gradYearValue, genderValue)
 
-    con.execute(insertQuery, values)
-    con.commit()
-    print("Inserted Successfully.")
+    try:
+        con.execute(insertQuery, values)
+        con.commit()
+        print("Inserted Successfully.")
+        messagebox.showinfo("Success", f"Student \"{nameValue.capitalize()}\ added successfully")
+    except:
+        messagebox.showerror("Failed", 'Something Went Wrong')
     addAPP.destroy()
 
 
 # To Adding Student in the Database
 def addStudent():
-    # root.destroy()
+    root.destroy()
 
     global addAPP, studentAddressEntry, studentDobEntry, studentNameEntry, studentContactEntry, studentBranchEntry, studentCourseEntry, studentGraduationYearEntry, entry, var, StudentImageEntry
 
@@ -252,15 +261,96 @@ def addStudent():
 
     addAPP.mainloop()
 
+def delSubmitButton():
 
-# addStudent()
-# return
+    studentID = toDeleteIDEntry.get()
+
+    try:
+        studentID = int(studentID)
+        print("correctID")
+    except:
+        print("Incorrect ID")
+        toDeleteIDEntry.delete(0, END)
+        return
+
+    cur.execute(f"SELECT student_name FROM {studentsTable} WHERE student_id = {studentID};")
+    con.commit()
+    studentName = ""
+
+    for i in cur:
+        studentName = i[0]
+        print(studentName)
+
+    if len(studentName) == 0:
+        messagebox.showerror("Failed", "Student Does not Exist")
+        toDeleteIDEntry.delete(0, END)
+        return
+
+    answer = messagebox.askyesno("Confirm", f"Do you want to delete the records of \"{studentName.capitalize()}\"?")
+    if answer == False:
+        delAPP.destroy()
+        return
+
+
+    deleteStudentQuery = f"DELETE FROM {studentsTable} WHERE student_id = {studentID};"
+
+    try:
+        cur.execute(deleteStudentQuery)
+        con.commit()
+        messagebox.showinfo("Success", f"{studentName.capitalize()} records deleted Successfully")
+    except:
+        messagebox.showerror("Failed", "Something went wrong")
+        return
+
+    delAPP.destroy()
 
 
 def delStudent():
-    pass
+    root.destroy()
+
+    global delAPP, toDeleteIDEntry
+
+    delAPP = Toplevel()
+    delAPP.title("Add Student")
+    delAPP.geometry("300x250")
+    delAPP.iconbitmap('img/logo.ico')
+    delAPP.config(bg='white')
+
+    # A container
+    headingFrame1 = Frame(delAPP, bg="#FFBB00", bd=5)
+    headingFrame1.place(relx=0.125, rely=0.1, relwidth=0.75, relheight=0.23)
+
+    # Container Label
+    headingLabel = Label(headingFrame1,
+                         text="Delete Student",
+                         bg='black',
+                         fg='white',
+                         font=('Great Vibes', 22))
+    headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
+
+    # StudentName Label and Entry
+    toDeleteIDLabel = Label(delAPP,
+                             text="Student ID : ",
+                             bg='white',
+                             fg='black',
+                             font=('Gill Sans MT', 12))
+    toDeleteIDLabel.place(relx=0.13, rely=0.45)
+    toDeleteIDEntry = TTK.Entry(delAPP)
+    toDeleteIDEntry.place(relx=0.42, rely=0.475, relwidth=0.45)
+
+    _img1 = PhotoImage(file="img/buttons/submit.png")
+
+    delSubmitBtn = Button(delAPP,
+                       bg='white',
+                       image=_img1,
+                       bd=0,
+                       cursor='hand2',
+                       command=delSubmitButton,
+                       font=('Gill Sans MT', 12))
+    delSubmitBtn.place(relx=0.325, rely=0.7, relwidth=0.35, relheight=0.15)
 
 
+    delAPP.mainloop()
 def updateData():
     pass
 
