@@ -51,7 +51,6 @@ def addStudentSubmit():
     print(nameValue, dobValue, addressValue, courseValue, branchValue,
           contactValue, gradYearValue)
 
-    insertQuery = f"INSERT INTO {studentsTable} (student_name, dob, course, branch, address, contact, img, g_year) VALUES (?,?,?,?,?,?,?,?);"
     values = (nameValue, dobValue, courseValue, branchValue, addressValue,
               contactValue, profileImage, gradYearValue)
 
