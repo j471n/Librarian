@@ -21,6 +21,7 @@ bookTable = getenv('BOOK_TABLE')
 posTable = getenv('POSITION_TABLE')
 
 
+# -----------------------------------------Add Student Section---------------------------------
 def OpenFile():
     global path, RemoveButton
     path = askopenfilename(filetypes=[("JPEG Files", '*.jpg'), ("PNG Files", '*.png')])
@@ -261,6 +262,8 @@ def addStudent():
 
     addAPP.mainloop()
 
+# ----------------------------- Delete Student Section-----------------------------------------
+
 def delSubmitButton():
 
     studentID = toDeleteIDEntry.get()
@@ -348,9 +351,9 @@ def delStudent():
                        command=delSubmitButton,
                        font=('Gill Sans MT', 12))
     delSubmitBtn.place(relx=0.325, rely=0.7, relwidth=0.35, relheight=0.15)
-
-
     delAPP.mainloop()
+
+
 def updateData():
     pass
 
@@ -359,10 +362,11 @@ def viewData():
     pass
 
 
+# ------------------------------------------Search Student Section --------------------------------------------
 def SearchData():
     pass
 
-
+# ---------------------------------------Student Main Portal Section---------------------------------------------
 def studentPortalWindow():
 
     global root
@@ -389,23 +393,26 @@ def studentPortalWindow():
     udtimg = PhotoImage(file='img/buttons/studentsButtons/udtbtn.png')
     viewimg = PhotoImage(file='img/buttons/studentsButtons/viewbtn.png')
     exitimg = PhotoImage(file='img/buttons/studentsButtons/exitbtn.png')
+    searchimg = PhotoImage(file='img/buttons/studentsButtons/search.png')
 
     leftbuttons = {
         addimg: addStudent,
         udtimg: updateData,
+        searchimg : SearchData
     }
 
     rightbuttons = {
         delimg: delStudent,
         viewimg: viewData,
+        exitimg : root.destroy
     }
 
-    bottomButtons = {exitimg: root.destroy}
+    # bottomButtons = {exitimg: root.destroy}
 
     # from modules.func
     Function.putButtons(root, leftbuttons, -0.05, 0.35, "+", 0.45,0.17,bgcolor=customColor, bd=0, direction=VERTICAL)
     Function.putButtons(root, rightbuttons, 0.6, 0.35, "+", 0.45, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
-    Function.putButtons(root, bottomButtons, 0.37, 0.75, "+", 0.26, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
+    # Function.putButtons(root, bottomButtons, 0.37, 0.75, "+", 0.26, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
     root.resizable(0, 0)
 
     root.mainloop()
