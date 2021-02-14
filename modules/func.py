@@ -114,13 +114,15 @@ def positionVerification(div, position):
 
 
 # Function to put the Buttons on the window
-def putButtons(window, set, X_Axis, Y_Axis, sign, width, height, bd=0, direction=VERTICAL):
+def putButtons(window, set, X_Axis, Y_Axis, sign, width, height, bgcolor='black',fgcolor='white', bd=0, direction=VERTICAL):
 
     for _img, fun in set.items():
 
         btn = Button(
             window,
             text="",
+            bg=bgcolor,
+            fg=fgcolor,
             image=_img,
             border=bd,
             # font=('Gill Sans MT', 12),
