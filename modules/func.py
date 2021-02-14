@@ -5,6 +5,8 @@ from os import getenv
 from dotenv import*
 import re
 from .database import *
+import io
+from PIL import Image
 
 
 env = find_dotenv('env/.env')
@@ -161,3 +163,16 @@ def bookIdChecker(bid):
     if t not in checklist:
         messagebox.showinfo('Failed', "You've Entered the Wrong Book ID.")
         return 1
+
+# I 
+def reduceImage(path):
+    basewidth = 200
+    img = Image.open(path)
+    wpercent = (basewidth / float(img.size[0]))
+    hsize = int((float(img.size[1]) * float(wpercent)))
+    img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+
+    byte_io = io.BytesIO()
+    img.save(byte_io, format='PNG')
+    byte_io = byte_io.getvalue()
+    return byte_io
