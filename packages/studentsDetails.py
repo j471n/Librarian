@@ -263,6 +263,7 @@ def addStudent():
                        font=('Gill Sans MT', 12))
     cancelBtn.place(relx=0.53, rely=0.8, relwidth=0.18, relheight=0.1)
 
+    addAPP.resizable(0,0)
     addAPP.mainloop()
 
 # ----------------------------- Delete Student Section-----------------------------------------
@@ -354,6 +355,8 @@ def delStudent():
                        command=delSubmitButton,
                        font=('Gill Sans MT', 12))
     delSubmitBtn.place(relx=0.325, rely=0.7, relwidth=0.35, relheight=0.15)
+
+    delAPP.resizable(0,0)
     delAPP.mainloop()
 
 
@@ -462,8 +465,8 @@ def resultPage(dict):
     global resultProfileImg
 
     try:
-        print('old')
         resultProfileImg = ImageTk.PhotoImage(Image.open(f"img/studentsDB/{dict['id']}.png"))
+        print('old')
     except:
         print('new')
         filepath = "img/studentsDB/" + str(dict['id']) + ".png"
@@ -479,7 +482,7 @@ def resultPage(dict):
     quitBtn = Button(resultAPP,cursor='hand2', image=quitImg, bd=0, bg='white', command=resultAPP.destroy)
     quitBtn.place(relx=0.39, rely=0.8, relheight=0.1, relwidth=0.22)
 
-
+    resultAPP.resizable(0,0)
     resultAPP.mainloop()
 
 
@@ -625,8 +628,4 @@ def studentPortalWindow():
     Function.putButtons(root, rightbuttons, 0.6, 0.35, "+", 0.45, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
     # Function.putButtons(root, bottomButtons, 0.37, 0.75, "+", 0.26, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
     root.resizable(0, 0)
-
     root.mainloop()
-
-
-# studentPortalWindow()
