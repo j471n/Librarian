@@ -164,7 +164,7 @@ def bookIdChecker(bid):
         messagebox.showinfo('Failed', "You've Entered the Wrong Book ID.")
         return 1
 
-# I 
+# I
 def reduceImage(path):
     basewidth = 200
     img = Image.open(path)
@@ -172,6 +172,30 @@ def reduceImage(path):
     hsize = int((float(img.size[1]) * float(wpercent)))
     img = img.resize((basewidth, hsize), Image.ANTIALIAS)
 
+    byte_io = io.BytesIO()
+    img.save(byte_io, format='PNG')
+    byte_io = byte_io.getvalue()
+    return byte_io
+
+def reduceImageByHeight(path):
+    baseheight = 200
+    img = Image.open(path)
+    hpercent = (baseheight / float(img.size[1]))
+    wsize = int((float(img.size[0]) * float(hpercent)))
+    img = img.resize((wsize, baseheight), Image.ANTIALIAS)
+
+    byte_io = io.BytesIO()
+    img.save(byte_io, format='PNG')
+    byte_io = byte_io.getvalue()
+    return byte_io
+
+def reduceImageSquare(path):
+
+    basewidth = 200
+    hsize = 200
+    img = Image.open(path)
+    img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+    
     byte_io = io.BytesIO()
     img.save(byte_io, format='PNG')
     byte_io = byte_io.getvalue()
