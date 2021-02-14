@@ -458,18 +458,20 @@ def resultPage(dict):
     genLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Address\t-  {dict['add']}", wraplength=475)
     genLabel.place(relx=0.1, rely=0.65)
 
-
-
     # Student Image
+    global resultProfileImg
 
-    filepath = "img/studentsDB/" + str(dict['id']) + ".png"
-    writeTofile(dict['img'], filepath)
-
-    resultProfileImg = ImageTk.PhotoImage(Image.open(f"img/studentsDB/{dict['id']}.png"))
+    try:
+        print('old')
+        resultProfileImg = ImageTk.PhotoImage(Image.open(f"img/studentsDB/{dict['id']}.png"))
+    except:
+        print('new')
+        filepath = "img/studentsDB/" + str(dict['id']) + ".png"
+        writeTofile(dict['img'], filepath)
+        resultProfileImg = ImageTk.PhotoImage(Image.open(f"img/studentsDB/{dict['id']}.png"))
 
     studentImg = Label(resultAPP, image=resultProfileImg, bg='black')
     studentImg.place(relx=0.55, rely=0.2)
-
 
 
     # QUIT BUTTON
