@@ -31,14 +31,15 @@ def OpenFile():
 
 # To remove the File
 def RemoveFile():
+    global path
     path = ""
     RemoveButton.destroy()
     StudentImageEntry.config(text="Choose")
 
 
 def addStudentSubmit():
-    global profileImage
 
+    global path, profileImage
     nameValue = studentNameEntry.get()
     dobValue = studentDobEntry.get_date()
     addressValue = studentAddressEntry.get()
@@ -76,16 +77,18 @@ def addStudentSubmit():
         return
 
     try:
-        profileImage = Function.reduceImage(path)
+        # global profileImage
+        profileImage = Function.reduceImageByHeight(path)
     except(NameError):
-        if genderValue == 'M':
-            print("Using Male Unknown Image")
-            path = "img/profile/male.jpg"
-        elif genderValue == 'F':
-            print("Using FeMale Unknown Image")
-            path = "img/profile/female.jpg"
+        if StudentImageEntry['text'] == 'Choose':
+            if genderValue == 'M':
+                print("Using Male Unknown Image")
+                path = "img/profile/male.jpg"
+            elif genderValue == 'F':
+                print("Using FeMale Unknown Image")
+                path = "img/profile/female.jpg"
 
-        profileImage = Function.reduceImage(path)
+            profileImage = Function.reduceImageByHeight(path)
 
 
     insertQuery = f"INSERT INTO {studentsTable} (student_name, dob, course, branch, address, contact, img, g_year, gender) VALUES (?,?,?,?,?,?,?,?,?);"
@@ -96,7 +99,7 @@ def addStudentSubmit():
         con.execute(insertQuery, values)
         con.commit()
         print("Inserted Successfully.")
-        messagebox.showinfo("Success", f"Student \"{nameValue.capitalize()}\ added successfully")
+        messagebox.showinfo("Success", f"Student \"{nameValue.capitalize()}\" added successfully")
     except:
         messagebox.showerror("Failed", 'Something Went Wrong')
     addAPP.destroy()
@@ -363,8 +366,214 @@ def viewData():
 
 
 # ------------------------------------------Search Student Section --------------------------------------------
+
+
+def writeTofile(data, filename):
+    # Convert binary data to proper format and write it on Hard Disk
+    with open(filename, 'wb') as file:
+        file.write(data)
+
+
+def resultPage(dict):
+
+    searchAPP.destroy()
+
+    global resultAPP
+
+    resultAPP = Toplevel()
+    resultAPP.title("Search Result")
+    resultAPP.geometry("500x500")
+    resultAPP.iconbitmap('img/logo.ico')
+    resultAPP.config(bg='white')
+
+
+    # A container
+    headingFrame1 = Frame(resultAPP, bg="#FFBB00", bd=5)
+    headingFrame1.place(relx=0.25, rely=0.03, relwidth=0.5, relheight=0.125)
+
+    # Container Label
+    headingLabel = Label(headingFrame1,
+                         text="Search Result",
+                         bg='black',
+                         fg='white',
+                         font=('Great Vibes', 22))
+    headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
+
+    # StudentID Label
+
+    try:
+        idLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"ID\t-  {dict['id']}")
+        idLabel.place(relx=0.1, rely=0.2)
+    except:
+        resultAPP.destroy()
+        messagebox.showerror("Failed", f"You've entered the wrong StudentID")
+        return
+    # Student Name Label
+    nameLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Name\t-  {dict['name']}")
+    nameLabel.place(relx=0.1, rely=0.25)
+
+    # studen DOB
+    dobLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"DOB\t-  {dict['dob']}")
+    dobLabel.place(relx=0.1, rely=0.3)
+
+    # Student Gender
+
+    if dict['gender'] == 'M':
+        dict['gender'] = 'Male'
+    else:
+        dict['gender'] = 'Female'
+
+    genLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Gender\t-  {dict['gender']}")
+    genLabel.place(relx=0.1, rely=0.35)
+
+    # Student Course
+
+    cLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Course\t-  {dict['course']}")
+    cLabel.place(relx=0.1, rely=0.4)
+
+    # Student Branch
+
+    bLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Branch\t-  {dict['branch']}")
+    bLabel.place(relx=0.1, rely=0.45)
+
+
+    # Student Contact
+
+    conLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Contact\t-  {dict['contact']}")
+    conLabel.place(relx=0.1, rely=0.5)
+
+    # Student Graduation Year
+
+    yearLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"G. Year\t-  {dict['g_year']}")
+    yearLabel.place(relx=0.1, rely=0.55)
+
+    # Student Fine
+
+
+    finLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Fine\t-  {dict['fine']} Rs.")
+    finLabel.place(relx=0.1, rely=0.6)
+
+    # Student Address
+
+    genLabel = Label(resultAPP, bg='white',font=('Gill Sans MT', 12), text=f"Address\t-  {dict['add']}", wraplength=475)
+    genLabel.place(relx=0.1, rely=0.65)
+
+
+
+    # Student Image
+
+    filepath = "img/studentsDB/" + str(dict['id']) + ".png"
+    writeTofile(dict['img'], filepath)
+
+    resultProfileImg = ImageTk.PhotoImage(Image.open(f"img/studentsDB/{dict['id']}.png"))
+
+    studentImg = Label(resultAPP, image=resultProfileImg, bg='black')
+    studentImg.place(relx=0.55, rely=0.2)
+
+
+
+    # QUIT BUTTON
+    quitImg = PhotoImage(file='img/buttons/studentsButtons/quit.png')
+    quitBtn = Button(resultAPP,cursor='hand2', image=quitImg, bd=0, bg='white', command=resultAPP.destroy)
+    quitBtn.place(relx=0.39, rely=0.8, relheight=0.1, relwidth=0.22)
+
+
+    resultAPP.mainloop()
+
+
+
+
+def Searching():
+    studentID = toDeleteIDEntry.get()
+
+    try:
+        studentID = int(studentID)
+        print("correctID")
+    except:
+        print("Incorrect ID")
+        searchAPP.destroy()
+        messagebox.showerror("Failed", "StudentID should be Integer")
+        return
+
+    global studentdat
+    studentData = {}
+    cur.execute(f"SELECT * FROM {studentsTable} WHERE student_id = {studentID};")
+    con.commit()
+
+    for data in cur:
+
+        try:
+            studentData.update({'id' : data[0]})
+            studentData.update({'name': data[1].title()})
+            studentData.update({'dob' : data[2]})
+            studentData.update({'course' : data[3].upper()})
+            studentData.update({'branch' : data[4].upper()})
+            studentData.update({'add': data[5].title()})
+            studentData.update({'contact' : data[6]})
+            studentData.update({'img' : data[7]})
+            studentData.update({'g_year' : data[8]})
+            studentData.update({'gender' : data[9]})
+            studentData.update({'fine' : data[10]})
+
+        except:
+            searchAPP.destroy()
+            messagebox.showerror("Failed", f"You've entered the wrong StudentID")
+            return
+
+    resultPage(studentData)
+
+
+
+
 def SearchData():
-    pass
+    root.destroy()
+
+    global searchAPP, toDeleteIDEntry
+
+    searchAPP = Toplevel()
+    searchAPP.title("Search Student")
+    searchAPP.geometry("300x250")
+    searchAPP.iconbitmap('img/logo.ico')
+    searchAPP.config(bg='white')
+
+    # A container
+    headingFrame1 = Frame(searchAPP, bg="#FFBB00", bd=5)
+    headingFrame1.place(relx=0.125, rely=0.1, relwidth=0.75, relheight=0.23)
+
+    # Container Label
+    headingLabel = Label(headingFrame1,
+                         text="Search Student",
+                         bg='black',
+                         fg='white',
+                         font=('Great Vibes', 22))
+    headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
+
+    # StudentName Label and Entry
+    toDeleteIDLabel = Label(searchAPP,
+                            text="Student ID : ",
+                            bg='white',
+                            fg='black',
+                            font=('Gill Sans MT', 12))
+    toDeleteIDLabel.place(relx=0.13, rely=0.45)
+    toDeleteIDEntry = TTK.Entry(searchAPP)
+    toDeleteIDEntry.place(relx=0.42, rely=0.475, relwidth=0.45)
+
+    _img1 = PhotoImage(file="img/buttons/submit.png")
+
+    searchSubmitBtn = Button(searchAPP,
+                             bg='white',
+                             image=_img1,
+                             bd=0,
+                             cursor='hand2',
+                             command=Searching,
+                             font=('Gill Sans MT', 12))
+    searchSubmitBtn.place(relx=0.325, rely=0.7, relwidth=0.35, relheight=0.15)
+
+    searchAPP.resizable(0,0)
+    searchAPP.mainloop()
+
+
+# SearchData()
 
 # ---------------------------------------Student Main Portal Section---------------------------------------------
 def studentPortalWindow():
