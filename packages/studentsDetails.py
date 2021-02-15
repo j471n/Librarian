@@ -1,7 +1,7 @@
 from tkinter import *
 import sqlite3
 from dotenv import *
-from os import getenv, pardir
+from os import getenv
 import tkinter.ttk as TTK
 import modules.func as Function
 from PIL import ImageTk, Image
@@ -577,10 +577,116 @@ def SearchData():
     searchAPP.resizable(0,0)
     searchAPP.mainloop()
 
+#----------------------------------View Student List -------------------------------
 
-# SearchData()
+
+
+def viewData():
+    root.destroy()
+
+    viewAPP = Toplevel()
+    viewAPP.title('View Student Database')
+    viewAPP.geometry("800x400")
+    viewAPP.iconbitmap('img/logo.ico')
+    viewAPP.config(bg='white')
+
+    # A container
+    headingFrame1 = Frame(viewAPP, bg="#FFBB00", bd=5)
+    headingFrame1.place(relx=0.25, rely=0.03, relwidth=0.5, relheight=0.125)
+
+    # Container Label
+    headingLabel = Label(headingFrame1,
+                         text="Student Database",
+                         bg='black',
+                         fg='white',
+                         font=('Great Vibes', 22))
+    headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
+
+
+    # Table
+    studentTree = TTK.Treeview(viewAPP)
+
+    # ScrollBar Adding to Treeview
+    tree_scroll = Scrollbar(viewAPP, orient="vertical", command=studentTree.yview)
+    tree_scroll.place(relx=0.98, rely=0.2, relheight=0.6, relwidth=0.02)
+    studentTree.configure(yscrollcommand=tree_scroll.set)
+
+    studentTree['columns'] = ("SID", "Name", "DOB", "Gender", "Course", "Branch", "Contact", "Fine")
+
+    #Heading List
+    studentTree.heading("#0", text="")
+    studentTree.heading("SID", text="SID", anchor=CENTER)
+    studentTree.heading("Name", text="Name", anchor=CENTER)
+    studentTree.heading("DOB", text="DOB", anchor=CENTER)
+    studentTree.heading("Gender", text="Gender", anchor=CENTER)
+    studentTree.heading("Course", text="Course", anchor=CENTER)
+    studentTree.heading("Branch", text="Branch", anchor=CENTER)
+    studentTree.heading("Contact", text="Contact", anchor=CENTER)
+    studentTree.heading("Fine", text="Fine", anchor=CENTER)
+    # Colums List
+    studentTree.column('#0', width=0, stretch=NO)
+    studentTree.column('SID', width=10, anchor=CENTER)
+    studentTree.column('Name', width=20, anchor=CENTER)
+    studentTree.column('DOB', width=10, anchor=CENTER)
+    studentTree.column('Gender', width=20, anchor=CENTER)
+    studentTree.column('Course', width=10, anchor=CENTER)
+    studentTree.column('Branch', width=10, anchor=CENTER)
+    studentTree.column('Contact', width=10, anchor=CENTER)
+    studentTree.column('Fine', width=10, anchor=CENTER)
+
+    # Styling Treeview
+    style = TTK.Style()
+    style.configure("Treeview", background='#d3d3d3', foreground="black", rowheight=30, font=('Arial', 9))
+
+    style.map("Treeview",
+              background=[('selected', 'green'), ('active', '#D3D3D3')])
+
+    # Fetching data from database
+    count = 0
+    try:
+
+        query = "SELECT * FROM students;"
+        cur.execute(query)
+        con.commit()
+
+        # Adding Data to the Treeview Table
+        for data in cur:
+            data = list(data)
+
+            # Checking if the column is None then change the value to -
+            for i in range(len(data)):
+                if data[i] == None:
+                    data[i] = '-'
+
+            # Inserting in the Treeview
+            studentTree.insert( parent='', index=END, iid=count, text="",
+                values=(data[0],
+                        data[1].title(),
+                        data[2],
+                        data[9],
+                        data[3].upper(),
+                        data[4].upper(),
+                        data[6],
+                        data[10]
+                )
+            )
+            count += 1
+
+        studentTree.place(relx=0.025, rely=0.2, relwidth=0.95, relheight=0.6)
+    except:
+        messagebox.showinfo("Failed to fetch files from database")
+
+    # QUI Button
+    quitImg = PhotoImage(file='img/buttons/studentsButtons/quit.png')
+    quitBtn = Button(viewAPP,cursor='hand2', image=quitImg, bd=0, bg='white', command=viewAPP.destroy)
+    quitBtn.place(relx=0.39, rely=0.85, relheight=0.1, relwidth=0.22)
+
+    viewAPP.resizable(0,0)
+    viewAPP.mainloop()
+
 
 # ---------------------------------------Student Main Portal Section---------------------------------------------
+
 def studentPortalWindow():
 
     global root
@@ -626,6 +732,6 @@ def studentPortalWindow():
     # from modules.func
     Function.putButtons(root, leftbuttons, -0.05, 0.35, "+", 0.45,0.17,bgcolor=customColor, bd=0, direction=VERTICAL)
     Function.putButtons(root, rightbuttons, 0.6, 0.35, "+", 0.45, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
-    # Function.putButtons(root, bottomButtons, 0.37, 0.75, "+", 0.26, 0.17, bgcolor=customColor, bd=0, direction=VERTICAL)
+    # Function.putButtons(root, bottomButtons, 0.37, 0.75, "+", 0.26, 0.17, bgcolor=customColor, bd=0, viewAPPection=VERTICAL)
     root.resizable(0, 0)
     root.mainloop()
