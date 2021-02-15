@@ -43,11 +43,11 @@ def addStudentSubmit():
     nameValue = studentNameEntry.get()
     dobValue = studentDobEntry.get_date()
     addressValue = studentAddressEntry.get()
-    courseValue = studentCourseEntry.get()
+    courseValue = courseVAR.get()
     branchValue = studentBranchEntry.get()
     contactValue = studentContactEntry.get()
     gradYearValue = studentGraduationYearEntry.get()
-    genderValue = var.get()
+    genderValue = genderVAR.get()
 
     answer = messagebox.askyesno("Confirm", f"Do you want to add \"{nameValue.capitalize()}\" as Student?")
     if answer == False:
@@ -84,7 +84,7 @@ def addStudentSubmit():
             if genderValue == 'M':
                 print("Using Male Unknown Image")
                 path = "img/profile/male.jpg"
-            elif genderValue == 'F':
+            else:
                 print("Using FeMale Unknown Image")
                 path = "img/profile/female.jpg"
 
@@ -105,11 +105,28 @@ def addStudentSubmit():
     addAPP.destroy()
 
 
+
+def changeBranch(e=None):
+    courseVal = courseVAR.get()
+    if courseVal == 'B.Tech':
+        studentBranchEntry['values'] = ('CSE', 'EE','ECE', 'CIVIL', 'IT', 'ME')
+
+    elif courseVal == 'B.Com':
+        studentBranchEntry['values'] = ('B.Com', 'Hons.')
+
+    elif courseVal == 'MBA':
+        studentBranchEntry['values'] = ('Finance', 'Human Resources')
+
+    else:
+        studentBranchEntry['values'] = ('None')
+    studentBranchEntry.current(0)
+
+
 # To Adding Student in the Database
 def addStudent():
     root.destroy()
 
-    global addAPP, studentAddressEntry, studentDobEntry, studentNameEntry, studentContactEntry, studentBranchEntry, studentCourseEntry, studentGraduationYearEntry, entry, var, StudentImageEntry
+    global addAPP, studentAddressEntry, studentDobEntry, studentNameEntry, studentContactEntry, studentBranchEntry, studentCourseEntry, studentGraduationYearEntry, entry, genderVAR, StudentImageEntry, courseVAR
 
     addAPP = Toplevel()
     addAPP.title("Add Student")
@@ -164,33 +181,37 @@ def addStudent():
                             font=('Gill Sans MT', 12))
     genderLabel.place(relx=0.6, rely=0.305)
 
-    var = StringVar()
-    monthchoosen = TTK.Combobox(addAPP, width = 27, textvariable = var, state="readonly")
+    genderVAR = StringVar()
+    monthchoosen = TTK.Combobox(addAPP, width = 27, textvariable = genderVAR, state="readonly")
     monthchoosen.place(relx=0.75, rely=0.32, relwidth=0.1)
     # Adding combobox drop down list
     monthchoosen['values'] = ('M', 'F')
     monthchoosen.current(0)
+
     # Student Coruse
 
-    studentCourseLabel = Label(addAPP,
-                               text="Course : ",
-                               bg='white',
-                               fg='black',
-                               font=('Gill Sans MT', 12))
+    studentCourseLabel = Label(addAPP, text="Course : ",  bg='white', fg='black', font=('Gill Sans MT', 12))
     studentCourseLabel.place(relx=0.15, rely=0.365)
-    studentCourseEntry = TTK.Entry(addAPP)
+
+    courseVAR = StringVar()
+    studentCourseEntry = TTK.Combobox(addAPP, width=30, textvariable=courseVAR, state='readonly')
     studentCourseEntry.place(relx=0.4, rely=0.38, relwidth=0.45)
+    studentCourseEntry['values'] = ('B.Tech', 'B.Com', 'BSC', 'B.Ed', 'B.Pharm', 'BBA', 'MBA', 'BCA', 'MCA', 'PGDM', 'Diploma', 'BTC')
+    studentCourseEntry.current(0)
 
     # Student Branch
 
-    studentBranchLabel = Label(addAPP,
-                               text="Branch : ",
-                               bg='white',
-                               fg='black',
-                               font=('Gill Sans MT', 12))
+    studentBranchLabel = Label(addAPP,text="Branch : ", bg='white', fg='black', font=('Gill Sans MT', 12))
     studentBranchLabel.place(relx=0.15, rely=0.425)
-    studentBranchEntry = TTK.Entry(addAPP)
+
+    branchVAR = StringVar()
+
+    studentBranchEntry = TTK.Combobox(addAPP, textvariable=branchVAR, state='readonly')
     studentBranchEntry.place(relx=0.4, rely=0.44, relwidth=0.45)
+    studentBranchEntry['values'] = ('CSE', 'EE','ECE', 'CIVIL', 'IT', 'ME')
+    studentBranchEntry.current(0)
+
+    studentCourseEntry.bind('<<ComboboxSelected>>', changeBranch)
 
     # Student Address
 
