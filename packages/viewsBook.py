@@ -15,6 +15,7 @@ con = sqlite3.connect(getenv('DATABASE'))
 cur = con.cursor()
 # Enter Table Names here
 bookTable = getenv('BOOK_TABLE')
+studentsTable = getenv('STUDENT_TABLE')
 
 
 def View():
@@ -44,7 +45,7 @@ def View():
     headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
 
     # Select All books from the Library
-    getBooks = f"SELECT * FROM {bookTable} ORDER BY status;"
+    getBooks = f"SELECT *, {studentsTable}.student_name as name FROM {bookTable} LEFT JOIN students ON {bookTable}.issued_to = {studentsTable}.student_id ORDER BY status;"
 
     # Creating the Treeview and Scrolling
     Function.createTable(dir=root, height=0.6,width=1, marginX=0., marginY=0.25, query=getBooks, scroll="yes", sMarginX=0.988, sMarginY=0.285, sheight=0.56, swidth=0.012)
