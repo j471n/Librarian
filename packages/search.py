@@ -27,6 +27,7 @@ cur = con.cursor()
 
 # Book Table
 bookTable = getenv('BOOK_TABLE')
+studentsTable = getenv('STUDENT_TABLE')
 
 # Search Result List
 result = []
@@ -62,35 +63,35 @@ def executingQuery(query):
 
 # Search Via BOOK ID
 def searchByBookID():
-    query1 = f"SELECT * FROM {bookTable} WHERE book_id = '{inputField}' ORDER BY status;"
+    query1 = f"SELECT *, {studentsTable}.student_name as name FROM {bookTable} LEFT JOIN students ON {bookTable}.issued_to = {studentsTable}.student_id  WHERE book_id = '{inputField}' ORDER BY status;"
     return executingQuery(query1)
 
 # Search Via Author
 def searchByAuthor():
-    query1 = f"SELECT * FROM {bookTable} WHERE author LIKE '%{inputField.lower()}%' ORDER BY status;"
+    query1 = f"SELECT *, {studentsTable}.student_name as name FROM {bookTable} LEFT JOIN students ON {bookTable}.issued_to = {studentsTable}.student_id WHERE author LIKE '%{inputField.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
 # Search Via Title
 def searchByTitle():
-    query1 = f"SELECT * FROM {bookTable} WHERE title LIKE '%{inputField.lower()}%' ORDER BY status;"
+    query1 = f"SELECT *, {studentsTable}.student_name as name FROM {bookTable} LEFT JOIN students ON {bookTable}.issued_to = {studentsTable}.student_id WHERE title LIKE '%{inputField.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
 
 # Search By Position
 def searchByPosition():
-    query1 = f"SELECT * FROM {bookTable} WHERE phyLocation LIKE '%{inputField.lower()}%' ORDER BY status;"
+    query1 = f"SELECT *, {studentsTable}.student_name as name FROM {bookTable} LEFT JOIN students ON {bookTable}.issued_to = {studentsTable}.student_id WHERE phyLocation LIKE '%{inputField.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
 # Search By Date
 def searchByDate():
 
-    query1 = f"SELECT * FROM {bookTable} WHERE issued_date LIKE '%{inputField.lower()}%' ORDER BY status;"
+    query1 = f"SELECT *, {studentsTable}.student_name as name FROM {bookTable} LEFT JOIN students ON {bookTable}.issued_to = {studentsTable}.student_id WHERE issued_date LIKE '%{inputField.lower()}%' ORDER BY status;"
     return executingQuery(query1)
 
 # Search By Student Name
 def searchByStudent():
 
-    query1 = f"SELECT * FROM {bookTable} WHERE issued_to LIKE '%{inputField.lower()}%' ORDER BY status;"
+    query1 = f"SELECT *, {studentsTable}.student_name as name FROM {bookTable} LEFT JOIN students ON {bookTable}.issued_to = {studentsTable}.student_id WHERE issued_to = {inputField} ORDER BY status;"
     return executingQuery(query1)
 
 # Get the Key from teh Value
@@ -117,6 +118,7 @@ def OnClick(e=None):
 
     inputField = searchField.get()
 
+
     # Checking which option is selected
     if selectedOption == "1":
         resultedList = searchByBookID()
@@ -129,9 +131,14 @@ def OnClick(e=None):
     if selectedOption == "5":
         resultedList = searchByDate()
     if selectedOption == "6":
+        try:
+            inputField =  int(inputField)
+        except:
+            messagebox.showerror("Error", "StudentID must be Integer")
+            return
         resultedList = searchByStudent()
 
-    print(resultedList)
+    # print(resultedList)
 
     # Initializing the Result Window
     app = Toplevel()
@@ -178,7 +185,7 @@ def OnClick(e=None):
     }
 
     # from modules.func
-    Function.putButtons(app, buttonsOnSearch, 0.12, 0.8, "+", 0.075, 0.15, direction=HORIZONTAL)
+    Function.putButtons(app, buttonsOnSearch, 0.145, 0.8, "+", 0.08, 0.15, direction=HORIZONTAL)
 
     root.destroy()
     app.resizable(0,0)
@@ -208,7 +215,7 @@ def Search():
         "Title": "3",
         "Position" : "4",
         "Date" : "5",
-        "Student Name" : "6"
+        "Student ID" : "6"
     }
 
     col = 0
