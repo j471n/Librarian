@@ -380,13 +380,246 @@ def delStudent():
     delAPP.resizable(0,0)
     delAPP.mainloop()
 
+#---------------------------------------Update Database ----------------------
+
+
+# def updateFile():
+#     global updatedpath, RemoveButton
+#     updatedpath = askopenfilename(filetypes=[("JPEG Files", '*.jpg'), ("PNG Files", '*.png')])
+#     # updatedImageEntry.config(text="Choosed")
+#     RemoveButton = TTK.Button(updateAPP, text='x', cursor='hand2', command=RemoveFile)
+#     RemoveButton.place(relx=0.56, rely=0.47, relwidth=0.05)
+
+
+# # To remove the File
+# def RemoveFile():
+#     global updatedpath
+#     updatedpath = ""
+#     RemoveButton.destroy()
+#     # updatedImageEntry.config(text="Choosed")
+
+
+
+def updateSubmit():
+
+    global updateQuery, stuID
+    stuID = studentIDEntry.get()
+
+    value = ""
+    try:
+        stuID = int(stuID)
+    except:
+        messagebox.showerror("Error", "Student ID must be Integer")
+        studentIDEntry.delete(0, END)
+        return
+
+    if selectedField == 'Contact':
+        value = "Contact"
+
+        updateContactValue = updatedContactEntry.get()
+        try:
+            int(updateContactValue)
+        except:
+            messagebox.showwarning("Warning", "Contact No. Must be correct.\nDon't put space and '-' between numbers")
+            updatedContactEntry.delete(0, END)
+            print('Not correct')
+            return
+
+        updateQuery = f"UPDATE {studentsTable} SET contact = '{updateContactValue}' WHERE student_id = {stuID}"
+
+    if selectedField == 'Fine':
+        value = "Fine"
+        updateFineValue = updatedFineEntry.get()
+        try:
+            int(updateFineValue)
+        except:
+            messagebox.showwarning("Error", "Enter the Correct Fine Value")
+            updatedFineEntry.delete(0, END)
+            return
+
+        updateQuery = f"UPDATE {studentsTable} SET fine = '{updateFineValue}' WHERE student_id = {stuID}"
+
+    if selectedField == 'Address':
+
+        value = "Address"
+        updateAddressValue = updatedAddressEntry.get()
+
+        if updateAddressValue == "":
+            messagebox.showerror("Error", "Address is missing")
+            updatedAddressEntry.delete(0, END)
+            return
+        updateQuery = f"UPDATE {studentsTable} SET address = '{updateAddressValue}' WHERE student_id = {stuID}"
+
+
+    try:
+        cur.execute(updateQuery)
+        con.commit()
+        updateAPP.destroy()
+        messagebox.showinfo("Success", f"{value} Updated Successfully.")
+    except:
+        updateAPP.destroy()
+        messagebox.showerror("Failed", "Can't Update Data")
+    updateAPP.destroy()
+
+
+
+def createOnSelectLabelAndEntry(window, text):
+    global entry, Field
+
+    Field = Label(window, text=f"{text} : \t", fg='black', bg='white', font=('Gill Sans MT', 12))
+    Field.place(relx=0.15, rely=0.45)
+    entry = TTK.Entry(window)
+    entry.place(relx=0.4, rely=0.47, relwidth=0.45)
+    return entry
+
+def checkSelectedField(e=None):
+    global updatedContactEntry, updatedAddressEntry, updatedFineEntry, updatedImageEntry, updateQuery, stuID, selectedField
+    selectedField = updateFieldVAR.get()
+
+
+    if selectedField == 'Contact':
+        updatedContactEntry = createOnSelectLabelAndEntry(updateAPP, "Contact")
+
+    if selectedField == 'Fine':
+        updatedFineEntry = createOnSelectLabelAndEntry(updateAPP, "Fine")
+
+    if selectedField == 'Address':
+        updatedAddressEntry = createOnSelectLabelAndEntry(updateAPP, "Address")
+
+    # elif selectedField == 'Profile Image':
+    #     if already == True:
+    #         entry.destroy()
+    #     updatedImageLabel = Label(updateAPP, text="Image : \t", bg='white', fg='black', font=('Gill Sans MT', 12))
+    #     updatedImageLabel.place(relx=0.15, rely=0.45)
+
+    #     updatedImageEntry = TTK.Button(updateAPP, text='Choose', cursor='hand2', command=updateFile)
+    #     updatedImageEntry.place(relx=0.4, rely=0.466)
+
 
 def updateData():
-    pass
+    global updateAPP, studentIDEntry, updateFieldVAR, toUpdateField, already, alreadyImage
+
+    already = False
+
+    root.destroy()
+
+    updateAPP = Toplevel()
+    updateAPP.title("Update Student Info")
+    updateAPP.geometry("400x400")
+    updateAPP.iconbitmap('img/logo.ico')
+    updateAPP.config(bg='white')
+
+    # A container
+    headingFrame1 = Frame(updateAPP, bg="#FFBB00", bd=5)
+    headingFrame1.place(relx=0.2, rely=0.1, relwidth=0.6, relheight=0.15)
+
+    # Container Label
+    headingLabel = Label(headingFrame1,
+                         text="Update Student Info",
+                         bg='black',
+                         fg='white',
+                         font=('Great Vibes', 20))
+    headingLabel.place(relx=0, rely=0, relwidth=1, relheight=1)
+
+    # StudentID
+    studentIDLabel = Label(updateAPP,
+                             text="StudentID : ",
+                             bg='white',
+                             fg='black',
+                             font=('Gill Sans MT', 12))
+    studentIDLabel.place(relx=0.15, rely=0.3)
+    studentIDEntry = TTK.Entry(updateAPP)
+    studentIDEntry.place(relx=0.4, rely=0.31, relwidth=0.45)
 
 
-def viewData():
-    pass
+
+    updateLabel = Label(updateAPP,
+                        text="Update : ",
+                        bg='white',
+                        fg='black',
+                        font=('Gill Sans MT', 12))
+    updateLabel.place(relx=0.15, rely=0.37)
+
+    updateFieldVAR = StringVar()
+    toUpdateField = TTK.Combobox(updateAPP,
+                                width=20,
+                                textvariable=updateFieldVAR,
+                                state="readonly")
+    toUpdateField.place(relx=0.4, rely=0.385, relwidth=0.45)
+    # Adding combobox drop down list
+    toUpdateField['values'] = ('Contact','Address', 'Fine')
+    toUpdateField.current(0)
+
+    toUpdateField.bind('<<ComboboxSelected>>', checkSelectedField)
+
+
+
+    # Student Address
+
+    # updatedAddressLabel = Label(updateAPP,
+    #                             text="Address : ",
+    #                             bg='white',
+    #                             fg='black',
+    #                             font=('Gill Sans MT', 12))
+    # updatedAddressLabel.place(relx=0.15, rely=0.305)
+    # updatedAddressEntry = TTK.Entry(updateAPP)
+    # updatedAddressEntry.place(relx=0.4, rely=0.32, relwidth=0.45)
+
+    # Student Contact
+
+    # updatedContactLabel = Label(updateAPP,
+    #                             text="Contact : ",
+    #                             bg='white',
+    #                             fg='black',
+    #                             font=('Gill Sans MT', 12))
+    # updatedContactLabel.place(relx=0.15, rely=0.36)
+    # updatedContactEntry = TTK.Entry(updateAPP)
+    # updatedContactEntry.place(relx=0.4, rely=0.38, relwidth=0.45)
+
+    # Student Image
+    # updatedImageLabel = Label(updateAPP,
+    #                           text="Image : ",
+    #                           bg='white',
+    #                           fg='black',
+    #                           font=('Gill Sans MT', 12))
+    # updatedImageLabel.place(relx=0.15, rely=0.415)
+
+    # updatedImageEntry = TTK.Button(updateAPP,
+    #                                text='Choose',
+    #                                cursor='hand2',
+    #                                command=updateFile)
+    # updatedImageEntry.place(relx=0.4, rely=0.44)
+
+    # Button Images
+    _img1 = PhotoImage(file="img/buttons/submit.png")
+    _img2 = PhotoImage(file="img/buttons/cancel.png")
+
+    # Submit Button
+    SubmitBtn = Button(updateAPP,
+                       bg='white',
+                       image=_img1,
+                       bd=0,
+                       cursor='hand2',
+                       command=updateSubmit,
+                       font=('Gill Sans MT', 12))
+    SubmitBtn.place(relx=0.28, rely=0.8, relwidth=0.18, relheight=0.1)
+
+    # Cancel Button
+    cancelBtn = Button(updateAPP,
+                       bg='white',
+                       image=_img2,
+                       command=updateAPP.destroy,
+                       bd=0,
+                       cursor='hand2',
+                       font=('Gill Sans MT', 12))
+    cancelBtn.place(relx=0.53, rely=0.8, relwidth=0.18, relheight=0.1)
+
+    updateAPP.resizable(0, 0)
+    updateAPP.mainloop()
+
+
+
+
 
 
 # ------------------------------------------Search Student Section --------------------------------------------
