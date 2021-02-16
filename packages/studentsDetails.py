@@ -1,7 +1,8 @@
 from tkinter import *
 import sqlite3
 from dotenv import *
-from os import getenv
+from os import getenv, remove
+import os
 import tkinter.ttk as TTK
 import modules.func as Function
 from PIL import ImageTk, Image
@@ -383,26 +384,32 @@ def delStudent():
 #---------------------------------------Update Database ----------------------
 
 
-# def updateFile():
-#     global updatedpath, RemoveButton
-#     updatedpath = askopenfilename(filetypes=[("JPEG Files", '*.jpg'), ("PNG Files", '*.png')])
-#     # updatedImageEntry.config(text="Choosed")
-#     RemoveButton = TTK.Button(updateAPP, text='x', cursor='hand2', command=RemoveFile)
-#     RemoveButton.place(relx=0.56, rely=0.47, relwidth=0.05)
+def updateFile():
+    global updatedpath, RemoveButton
+    updatedpath = askopenfilename(filetypes=[("JPEG Files", '*.jpg'), ("PNG Files", '*.png')])
+    updatedImageEntry.config(text="Choosed")
+    entry.config(state='normal')
+    entry.insert(0, updatedpath)
+    entry.config(state='readonly')
+    RemoveButton = TTK.Button(updateAPP, text='x', cursor='hand2', command=RemoveFile)
+    RemoveButton.place(relx=0.6, rely=0.54, relwidth=0.05)
 
 
-# # To remove the File
-# def RemoveFile():
-#     global updatedpath
-#     updatedpath = ""
-#     RemoveButton.destroy()
-#     # updatedImageEntry.config(text="Choosed")
+# To remove the File
+def RemoveFile():
+    global updatedpath
+    updatedpath = ""
+    RemoveButton.destroy()
+    updatedImageEntry.config(text="Choose")
+    entry.config(state='normal')
+    entry.delete(0, END)
+    entry.config(state='readonly')
 
 
 
 def updateSubmit():
 
-    global updateQuery, stuID
+    global updateQuery, stuID, binaryImage, insertValue
     stuID = studentIDEntry.get()
 
     value = ""
@@ -415,7 +422,6 @@ def updateSubmit():
 
     if selectedField == 'Contact':
         value = "Contact"
-
         updateContactValue = updatedContactEntry.get()
         try:
             int(updateContactValue)
@@ -425,7 +431,9 @@ def updateSubmit():
             print('Not correct')
             return
 
-        updateQuery = f"UPDATE {studentsTable} SET contact = '{updateContactValue}' WHERE student_id = {stuID}"
+        updateQuery = f"UPDATE {studentsTable} SET contact = ? WHERE student_id = {stuID};"
+        insertValue = (updateContactValue,)
+
 
     if selectedField == 'Fine':
         value = "Fine"
@@ -437,7 +445,8 @@ def updateSubmit():
             updatedFineEntry.delete(0, END)
             return
 
-        updateQuery = f"UPDATE {studentsTable} SET fine = '{updateFineValue}' WHERE student_id = {stuID}"
+        updateQuery = f"UPDATE {studentsTable} SET fine = ? WHERE student_id = {stuID};"
+        insertValue = (updateFineValue,)
 
     if selectedField == 'Address':
 
@@ -448,19 +457,35 @@ def updateSubmit():
             messagebox.showerror("Error", "Address is missing")
             updatedAddressEntry.delete(0, END)
             return
-        updateQuery = f"UPDATE {studentsTable} SET address = '{updateAddressValue}' WHERE student_id = {stuID}"
+        updateQuery = f"UPDATE {studentsTable} SET address = ? WHERE student_id = {stuID};"
+        insertValue = (updateAddressValue,)
+
+    if selectedField == "Profile Image":
+        value = "Profile Image"
+
+        try:
+            binaryImage = Function.reduceImageByHeight(updatedpath)
+        except:
+            messagebox.showerror("Error", "You haven't select the Image")
+            return
+
+        updateQuery = f"UPDATE {studentsTable} SET img = ? WHERE student_id = {stuID};"
+        insertValue = (binaryImage, )
+        # Deleting File from Local Storage
+        if os.path.exists(f"img/studentsDB/{stuID}.png"):
+            remove(f"img/studentsDB/{stuID}.png")
+            print('deleted')
 
 
     try:
-        cur.execute(updateQuery)
+        cur.execute(updateQuery, insertValue)
         con.commit()
+
         updateAPP.destroy()
         messagebox.showinfo("Success", f"{value} Updated Successfully.")
     except:
         updateAPP.destroy()
         messagebox.showerror("Failed", "Can't Update Data")
-    updateAPP.destroy()
-
 
 
 def createOnSelectLabelAndEntry(window, text):
@@ -472,34 +497,44 @@ def createOnSelectLabelAndEntry(window, text):
     entry.place(relx=0.4, rely=0.47, relwidth=0.45)
     return entry
 
+
+def deleteChooseButton():
+    global img
+    if img == True:
+        updatedImageEntry.destroy()
+    img = False
+
+
 def checkSelectedField(e=None):
-    global updatedContactEntry, updatedAddressEntry, updatedFineEntry, updatedImageEntry, updateQuery, stuID, selectedField
+    global updatedContactEntry, updatedAddressEntry, updatedFineEntry, updateQuery, img, stuID, selectedField
     selectedField = updateFieldVAR.get()
 
 
     if selectedField == 'Contact':
+        deleteChooseButton()
         updatedContactEntry = createOnSelectLabelAndEntry(updateAPP, "Contact")
 
     if selectedField == 'Fine':
+        deleteChooseButton()
         updatedFineEntry = createOnSelectLabelAndEntry(updateAPP, "Fine")
 
     if selectedField == 'Address':
+        deleteChooseButton()
         updatedAddressEntry = createOnSelectLabelAndEntry(updateAPP, "Address")
 
-    # elif selectedField == 'Profile Image':
-    #     if already == True:
-    #         entry.destroy()
-    #     updatedImageLabel = Label(updateAPP, text="Image : \t", bg='white', fg='black', font=('Gill Sans MT', 12))
-    #     updatedImageLabel.place(relx=0.15, rely=0.45)
-
-    #     updatedImageEntry = TTK.Button(updateAPP, text='Choose', cursor='hand2', command=updateFile)
-    #     updatedImageEntry.place(relx=0.4, rely=0.466)
+    if selectedField == 'Profile Image':
+        img = True
+        global updatedImageEntry
+        updatedAddressEntry = createOnSelectLabelAndEntry(updateAPP, "Image")
+        updatedImageEntry = TTK.Button(updateAPP, text='Choose', cursor='hand2', command=updateFile)
+        updatedImageEntry.place(relx=0.4, rely=0.54)
+        entry.config(state='readonly')
 
 
 def updateData():
-    global updateAPP, studentIDEntry, updateFieldVAR, toUpdateField, already, alreadyImage
+    global updateAPP, studentIDEntry, updateFieldVAR, toUpdateField, img, updatedImageEntry
 
-    already = False
+    img = False
 
     root.destroy()
 
@@ -547,48 +582,11 @@ def updateData():
                                 state="readonly")
     toUpdateField.place(relx=0.4, rely=0.385, relwidth=0.45)
     # Adding combobox drop down list
-    toUpdateField['values'] = ('Contact','Address', 'Fine')
+    toUpdateField['values'] = ('Contact','Address', 'Fine', "Profile Image")
     toUpdateField.current(0)
 
     toUpdateField.bind('<<ComboboxSelected>>', checkSelectedField)
 
-
-
-    # Student Address
-
-    # updatedAddressLabel = Label(updateAPP,
-    #                             text="Address : ",
-    #                             bg='white',
-    #                             fg='black',
-    #                             font=('Gill Sans MT', 12))
-    # updatedAddressLabel.place(relx=0.15, rely=0.305)
-    # updatedAddressEntry = TTK.Entry(updateAPP)
-    # updatedAddressEntry.place(relx=0.4, rely=0.32, relwidth=0.45)
-
-    # Student Contact
-
-    # updatedContactLabel = Label(updateAPP,
-    #                             text="Contact : ",
-    #                             bg='white',
-    #                             fg='black',
-    #                             font=('Gill Sans MT', 12))
-    # updatedContactLabel.place(relx=0.15, rely=0.36)
-    # updatedContactEntry = TTK.Entry(updateAPP)
-    # updatedContactEntry.place(relx=0.4, rely=0.38, relwidth=0.45)
-
-    # Student Image
-    # updatedImageLabel = Label(updateAPP,
-    #                           text="Image : ",
-    #                           bg='white',
-    #                           fg='black',
-    #                           font=('Gill Sans MT', 12))
-    # updatedImageLabel.place(relx=0.15, rely=0.415)
-
-    # updatedImageEntry = TTK.Button(updateAPP,
-    #                                text='Choose',
-    #                                cursor='hand2',
-    #                                command=updateFile)
-    # updatedImageEntry.place(relx=0.4, rely=0.44)
 
     # Button Images
     _img1 = PhotoImage(file="img/buttons/submit.png")
@@ -616,10 +614,6 @@ def updateData():
 
     updateAPP.resizable(0, 0)
     updateAPP.mainloop()
-
-
-
-
 
 
 # ------------------------------------------Search Student Section --------------------------------------------
