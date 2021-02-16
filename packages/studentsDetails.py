@@ -285,6 +285,7 @@ def addStudent():
                        font=('Gill Sans MT', 12))
     cancelBtn.place(relx=0.53, rely=0.8, relwidth=0.18, relheight=0.1)
 
+    addAPP.bind('<Return>', addStudentSubmit)
     addAPP.resizable(0,0)
     addAPP.mainloop()
 
@@ -378,6 +379,7 @@ def delStudent():
                        font=('Gill Sans MT', 12))
     delSubmitBtn.place(relx=0.325, rely=0.7, relwidth=0.35, relheight=0.15)
 
+    delAPP.bind('<Return>', delSubmitButton)
     delAPP.resizable(0,0)
     delAPP.mainloop()
 
@@ -612,6 +614,7 @@ def updateData():
                        font=('Gill Sans MT', 12))
     cancelBtn.place(relx=0.53, rely=0.8, relwidth=0.18, relheight=0.1)
 
+    updateAPP.bind('<Return>', updateSubmit)
     updateAPP.resizable(0, 0)
     updateAPP.mainloop()
 
@@ -736,7 +739,7 @@ def resultPage(dict):
 
 
 
-def Searching():
+def Searching(e=None):
     studentID = toDeleteIDEntry.get()
 
     try:
@@ -822,6 +825,7 @@ def SearchData():
                              font=('Gill Sans MT', 12))
     searchSubmitBtn.place(relx=0.325, rely=0.7, relwidth=0.35, relheight=0.15)
 
+    searchAPP.bind('<Return>', Searching)
     searchAPP.resizable(0,0)
     searchAPP.mainloop()
 
