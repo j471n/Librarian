@@ -19,12 +19,13 @@ cur = con.cursor()
 
 # Book Table
 bookTable = getenv('BOOK_TABLE')
+studentsTable = getenv('STUDENT_TABLE')
+
 # root = Tk()
 
 def createTable(dir,height=0.5, width=1, marginX=0.1, marginY=0.1, loopThrough=cur, query="", scroll="NO", sheight=0.6, swidth=0.01, sMarginX=0.9, sMarginY=0.2):
     detail_tree = ttk.Treeview(dir)
     # detail_tree.pack()
-
     # ScrollBar Adding to Treeview
     if scroll !="NO":
         tree_scroll = Scrollbar(dir, orient="vertical", command=detail_tree.yview)
@@ -68,40 +69,40 @@ def createTable(dir,height=0.5, width=1, marginX=0.1, marginY=0.1, loopThrough=c
 
     # Fetching data from database
     count = 0
-    try:
+    # try:
 
-        if query != "":
-            cur.execute(query)
-            con.commit()
+    if query != "":
+        cur.execute(query)
+        con.commit()
 
-        # Adding Data to the Treeview Table
-        for data in loopThrough:
-            data = list(data)
-            # print(data)
+    # Adding Data to the Treeview Table
+    for data1 in loopThrough:
+        data = list(data1)
 
-            # Checking if the column is None then change the value to -
-            for i in range(len(data)):
-                if data[i] == None:
-                    data[i] = '-'
 
-            # Inserting in the Treeview
-            detail_tree.insert(parent='', index=END, iid=count, text="",
-                    values=(
-                        data[0],
-                        data[1].capitalize(),
-                        data[2].capitalize(),
-                        data[3].capitalize(),
-                        data[4].capitalize(),
-                        data[5],
-                        data[6],
-                        data[7].capitalize()
-                    )
-            )
-            count += 1
+        # Checking if the column is None then change the value to -
+        for i in range(len(data)):
+            if data[i] == None:
+                data[i] = '-'
 
-        detail_tree.place(relx=marginX, rely=marginY, relwidth=width, relheight=height)
-    except:
-        messagebox.showinfo("Failed to fetch files from database")
+        # Inserting in the Treeview
+        detail_tree.insert(parent='', index=END, iid=count, text="",
+                values=(
+                    data[0],
+                    data[1].capitalize(),
+                    data[2].capitalize(),
+                    data[3].capitalize(),
+                    data[4].capitalize(),
+                    data[5],
+                    data[6],
+                    data[9]
+                )
+        )
+        count += 1
+
+    detail_tree.place(relx=marginX, rely=marginY, relwidth=width, relheight=height)
+    # except:
+    #     messagebox.showinfo("Failed to fetch files from database")
 
 # To Verify Position
 def positionVerification(div, position):
@@ -142,7 +143,7 @@ def putButtons(window, set, X_Axis, Y_Axis, sign, width, height, bgcolor='black'
 
         elif direction == HORIZONTAL:
             if sign == "+":
-                X_Axis += width
+                X_Axis += width+0.01
             elif sign == "-":
                 X_Axis -= width
 
@@ -195,7 +196,7 @@ def reduceImageSquare(path):
     hsize = 200
     img = Image.open(path)
     img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-    
+
     byte_io = io.BytesIO()
     img.save(byte_io, format='PNG')
     byte_io = byte_io.getvalue()
