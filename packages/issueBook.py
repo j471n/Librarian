@@ -16,11 +16,12 @@ cur = con.cursor()  #cur -> cursor
 
 # Enter Table Names here
 bookTable = getenv('BOOK_TABLE')
+studentsTable = getenv('STUDENT_TABLE')
 
 # Getting values and checking that every field should have value
 def issue(event=None):
 
-    global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date,location, issuedName
+    global issueBtn, labelFrame, lb1, inf1, inf2, inf3, cancelBtn, root, Canvas1, status, check, Date,location, issuedID, issuedName
 
     bid = inf1.get()
     issueto = inf2.get()
@@ -31,6 +32,20 @@ def issue(event=None):
         messagebox.showerror("Failed", "All Fields are Required.")
         return
 
+    try:
+        int(issueto)
+    except:
+        messagebox.showerror("Error", "Student ID Should be Integer")
+        return
+
+
+    cur.execute(f"SELECT student_name FROM {studentsTable} WHERE student_id = {issueto};")
+    con.commit()
+
+    studentName = ""
+    for name in cur:
+        studentName = name[0]
+
     # Checking bookID is correct or not
     if Function.bookIdChecker(bid) == 1:
         root.destroy()
@@ -38,7 +53,7 @@ def issue(event=None):
 
 
     # SQL
-    updateStatus = f"UPDATE {bookTable} SET status = 'issued', phyLocation = NULL, issued_date = '{issueDate}', issued_to = '{issueto}' WHERE book_id = '{bid}';"
+    updateStatus = f"UPDATE {bookTable} SET status = 'issued', phyLocation = NULL, issued_date = '{issueDate}', issued_to = {issueto} WHERE book_id = '{bid}';"
     issueDateAndName = f"SELECT issued_date, issued_to FROM {bookTable} WHERE book_id = '{bid}';"
     getBookDetails = f"SELECT title, phyLocation FROM {bookTable} WHERE book_id = '{bid}';"
     checkAvail = f"SELECT status FROM {bookTable} WHERE book_id = '{bid}';"
@@ -59,9 +74,13 @@ def issue(event=None):
             # Fetching the Issue Date and the Student name
             for i in cur:
                 Date = i[0]
-                issuedName = i[1]
+                issuedID = i[1]
+
+            cur.execute(f"SELECT student_name FROM {studentsTable} WHERE student_id = {int(issuedID)};")
             root.destroy()
-            messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  str(issuedName).capitalize())
+            for i in cur:
+                issuedName = i[0]
+            messagebox.showinfo('Message', "Already Issued on " + str(Date) + " to " +  issuedName.capitalize())
             return
         elif check == 'available':
             cur.execute(getBookDetails)
@@ -77,7 +96,7 @@ def issue(event=None):
             cur.execute(updateStatus)
             con.commit()
             root.destroy()
-            messagebox.showinfo('Success', f"The Book '{bName}' is at '{location}'.\nSuccessfully Issued on " + str(issueDate) + " to " + str(issueto).capitalize())
+            messagebox.showinfo('Success', f"The Book '{bName}' is at '{location}'.\nSuccessfully Issued on " + str(issueDate) + " to " + studentName.capitalize())
     except:
         messagebox.showinfo("Search Error", "The value entered is wrong, Try again.")
     root.destroy()
@@ -131,7 +150,7 @@ def issueBook():
 
     # Issued To Student name
     lb2 = Label(labelFrame,
-                text="Issued To : ",
+                text="Student ID : ",
                 bg='black',
                 fg='white',
                 font=('Gill Sans MT', 14))

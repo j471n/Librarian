@@ -13,6 +13,7 @@ from packages.feedback import feedBack
 from packages.about import aboutUS
 from packages.search import Search
 from packages.shelvesUpdation import UpdateShelves
+from packages.studentsDetails import studentPortalWindow
 
 # Loading ENV
 env = find_dotenv('env/.env')
@@ -54,6 +55,7 @@ img6 = PhotoImage(file="img/buttons/f-icon.png")
 img7 = PhotoImage(file="img/buttons/info-icon.png")
 img8 = PhotoImage(file="img/buttons/search.png")
 img9 = PhotoImage(file="img/buttons/updateBtn.png")
+img10 = PhotoImage(file="img/buttons/studentsBtn.png")
 
 # Initializing the buttons and placing them
 buttons = {
@@ -72,7 +74,8 @@ sideButtons = {
     img6 : feedBack,
     img7 : aboutUS,
     img8 : Search,
-    img9 : UpdateShelves
+    img9 : UpdateShelves,
+    img10 : studentPortalWindow
 
 }
 

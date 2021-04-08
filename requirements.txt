@@ -2,3 +2,4 @@ Pillow==8.1.0
 python-dotenv==0.15.0
 pyarmor==6.6.1
 pyinstaller==4.2.0
+tkcalendar==1.6.1

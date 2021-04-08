@@ -8,68 +8,38 @@ This is Just like a project Report you can read it to get all the information.
 [**INTRODUCTION**](#1)
 
  - [OVERVIEW](#1.1)
-
  - [OBJECTIVE](#1.2)
-
  - [PROGRAMMING LANGUAGES](#1.3)
-
      - [PYTHON](#1.3.1)
-    
      - [MySQL](#1.3.2)
-
  - [REQUIREMENTS](#1.4)
-
      - [Tkinter](#1.4.1)
-
      - [PyMySQL](#1.4.2)
-
      - [Python-Dotenv](#1.4.3)
-
      - [SMTP & MIME](#1.4.4)
-
      - [Pillow](#1.4.5)
 
 [**FEATURES**](2)
-
  - [OVERVIEW](#2.1)
-
  - [Add Book](#2.2)
-
  - [Delete Book](#2.3)
-
  - [Issue Book](#2.4)
-
  - [Return Book](#2.5)
-
  - [View Book Details](#2.6)
-
  - [Feedback Form](#2.7)
-
  - [Update Books Positions](#2.8)
-
  - [Search Book](#2.9)
 
-[**FUTURE SCOPE**](#3)
-
-[**APPENDIX – A**](#4)
-
-[**REFERENCES**](#5)
-
-[*Contributors*](#6)
-
-[*FAQ*](#7)
-
-
+[**FUTURE SCOPE**](#3)<br>
+[**APPENDIX – A**](#4)<br>
+[**REFERENCES**](#5)<br>
+[*Contributors*](#6)<br>
+[*FAQ*](#7)<br>
 
 
 <h2 id='1'>INTRODUCTION </h2>
 
-
-
-
-
 <h3 id='1.1'>OVERVIEW</h3>
-
 
 
 This Project is Based on the Digital Library Management System. In which Our aim was to make a GUI application which can be used for managing the books in the Physical Library as the Digital Form. So that user can use it whenever he wants to check the data of books of the Physical Library. So, we came up with this Project which we’ve named as “Digi Library”.

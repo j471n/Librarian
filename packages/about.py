@@ -41,8 +41,8 @@ def aboutUS():
     Label(root, image=img1, bg=color).grid(row=0, column=2, padx=5, pady=10)
 
     # Making Instagram Buttons
-    button1 = Button(root, text='',image=buttonIMG, bg='white', border=0, command=profile1).place(relx=0.13, rely=0.79)
-    button2 = Button(root, text='',image=buttonIMG, bg='white',border=0, command=profile2).place(relx=0.625, rely=0.79)
+    button1 = Button(root, text='',image=buttonIMG, bg='white', border=0, cursor='hand2', command=profile1).place(relx=0.13, rely=0.79)
+    button2 = Button(root, text='',image=buttonIMG, bg='white',border=0, cursor='hand2', command=profile2).place(relx=0.625, rely=0.79)
 
     # Restricting Resizing
     root.resizable(0,0)
